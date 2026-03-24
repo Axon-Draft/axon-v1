@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="acid">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXON DRAFT — Career Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ══ THEMES ══ */
+[data-theme="acid"]{--bg:#060606;--accent:#c9f040;--cta-fg:#060606;--mx-col:rgba(201,240,64,.18);--mx-bg:rgba(6,6,6,.06);--geo-col:rgba(201,240,64,.12);--accent-dim:rgba(201,240,64,.07);--t1:#edeae0;--t2:#cccccc;--t3:#aaaaaa;--t4:#777777;--t5:#555555;--ln:#2a2a2a;--ln2:#1e1e1e;--card:#0a0a0a;--hover:#0e0e0e}
+[data-theme="red"]{--bg:#080404;--accent:#e63946;--cta-fg:#ffffff;--mx-col:rgba(230,57,70,.18);--mx-bg:rgba(8,4,4,.06);--geo-col:rgba(230,57,70,.12);--accent-dim:rgba(230,57,70,.07);--t1:#f5f0eb;--t2:#ccbbbb;--t3:#bbbbbb;--t4:#888888;--t5:#5a3030;--ln:#2e1a1a;--ln2:#221010;--card:#0d0606;--hover:#100808}
+[data-theme="blue"]{--bg:#020408;--accent:#00d4ff;--cta-fg:#020408;--mx-col:rgba(0,212,255,.18);--mx-bg:rgba(2,4,8,.06);--geo-col:rgba(0,212,255,.12);--accent-dim:rgba(0,212,255,.07);--t1:#e8f4ff;--t2:#ccddee;--t3:#aabbcc;--t4:#7799aa;--t5:#2a4060;--ln:#0e2040;--ln2:#081828;--card:#060c14;--hover:#060e1a}
+[data-theme="amber"]{--bg:#060502;--accent:#f5a623;--cta-fg:#060502;--mx-col:rgba(245,166,35,.18);--mx-bg:rgba(6,5,2,.06);--geo-col:rgba(245,166,35,.12);--accent-dim:rgba(245,166,35,.07);--t1:#faf4e8;--t2:#ccbb88;--t3:#bbaa88;--t4:#8a7a5a;--t5:#3a2e10;--ln:#2e2410;--ln2:#221a08;--card:#0a0804;--hover:#0e0a04}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t1);font-family:'IBM Plex Mono',monospace;overflow-x:hidden;cursor:crosshair;transition:background .5s}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.6}
+
+/* ── THEME SWITCHER ── */
+#theme-sw{position:fixed;bottom:24px;right:24px;z-index:8500;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.75);border:1px solid var(--ln);backdrop-filter:blur(14px);padding:9px 14px}
+.sw-lbl{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);padding-right:10px;border-right:1px solid var(--ln);white-space:nowrap}
+.sw-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .18s}
+.sw-dot:hover{transform:scale(1.25)}
+.sw-dot.on{border-color:var(--t1);transform:scale(1.2)}
+.sw-dot[data-t="acid"]{background:#c9f040}
+.sw-dot[data-t="red"]{background:#e63946}
+.sw-dot[data-t="blue"]{background:#00d4ff}
+.sw-dot[data-t="amber"]{background:#f5a623}
+.sw-name{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);padding-left:10px;border-left:1px solid var(--ln);min-width:68px;transition:color .3s}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:8000;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--ln);transition:border-color .4s}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:6px;cursor:pointer;color:var(--t1)}
+.nav-logo span{color:var(--accent);transition:color .4s}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-link{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);cursor:pointer;transition:color .2s;font-family:'Space Mono',monospace;border:none;background:none}
+.nav-link:hover{color:var(--t1)}
+.nav-cta{font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--accent);color:var(--cta-fg);padding:10px 18px;font-family:'Space Mono',monospace;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.nav-cta:hover{background:var(--t1);box-shadow:3px 3px 0 var(--accent);transform:translate(-2px,-2px)}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.22s}.rd3{transition-delay:.36s}
+section{position:relative;overflow:hidden}
+
+/* ═══════════════ HERO ═══════════════ */
+#hero{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding-top:72px;background:var(--bg);transition:background .5s}
+#matrix-canvas{position:absolute;inset:0;opacity:.35}
+.geo-circle{position:absolute;border-radius:50%;border:1px solid var(--geo-col);animation:geoSpin 60s linear infinite;transition:border-color .5s}
+.gc1{width:700px;height:700px;top:-200px;right:-200px}
+.gc2{width:400px;height:400px;top:50px;right:50px;opacity:.5;animation-direction:reverse;animation-duration:35s}
+.gc3{width:200px;height:200px;top:180px;right:180px;animation-duration:25s}
+@keyframes geoSpin{to{transform:rotate(360deg)}}
+.geo-rect{position:absolute;border:1px solid var(--geo-col);opacity:.6}
+.gr1{width:300px;height:300px;bottom:120px;left:-60px;transform:rotate(15deg);animation:rectDrift 12s ease-in-out infinite alternate}
+.gr2{width:150px;height:150px;bottom:200px;left:80px;animation:rectDrift 9s ease-in-out infinite alternate-reverse}
+@keyframes rectDrift{to{transform:rotate(22deg) translate(12px,-8px)}}
+.scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:2}
+
+.hero-content{position:relative;z-index:10;padding:60px 48px 40px;display:flex;flex-direction:column;justify-content:flex-end;min-height:calc(100vh - 72px)}
+.hero-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--t3);margin-bottom:28px;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:16px}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--accent);flex-shrink:0;transition:background .4s}
+.hero-headline{display:grid;grid-template-columns:1fr auto;gap:0;align-items:end;margin-bottom:48px}
+.hero-type{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,14vw,200px);line-height:.82}
+.hero-type .l1{display:block;color:var(--t1)}
+.hero-type .l2{display:block;color:var(--accent);transition:color .4s}
+.hero-type .l3{display:block;-webkit-text-stroke:1px var(--t5);color:transparent}
+.hero-statbar{display:flex;flex-direction:column;border-left:1px solid var(--ln);padding-left:28px;margin-bottom:8px;width:180px;flex-shrink:0}
+.hero-stat{padding:16px 0;border-bottom:1px solid var(--ln2)}
+.hero-stat:last-child{border-bottom:none}
+.hs-val{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--accent);line-height:1;transition:color .4s}
+.hs-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace;margin-top:2px}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;padding-top:32px;border-top:1px solid var(--ln);flex-wrap:wrap}
+.hero-sub{max-width:400px;font-size:11px;line-height:2.1;color:var(--t3)}
+.hero-sub em{color:var(--t1);font-style:normal}
+.hero-cta-group{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.hero-cta{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;background:var(--accent);color:var(--cta-fg);padding:16px 32px;font-weight:700;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:12px}
+.hero-cta:hover{background:var(--t1);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--accent)}
+.hero-tag{font-size:8px;letter-spacing:3px;color:var(--t4);text-transform:uppercase;font-family:'Space Mono',monospace}
+.hero-ticker{height:38px;border-top:1px solid var(--ln2);overflow:hidden;display:flex;align-items:center;position:relative;z-index:10}
+.ticker-track{display:flex;animation:ticker 25s linear infinite;white-space:nowrap}
+.ticker-item{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--t4);padding:0 48px;font-family:'Space Mono',monospace}
+.ticker-item span{color:var(--accent);transition:color .4s}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* ═══════════════ CUBE SECTION ═══════════════ */
+#cube-section{position:relative;height:100vh;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);transition:background .5s}
+#cube-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+#cube-eyebrow{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--t3);white-space:nowrap;z-index:10;display:flex;align-items:center;gap:16px}
+#cube-eyebrow::before,#cube-eyebrow::after{content:'';width:40px;height:1px;background:var(--ln);display:block}
+#cube-label-wrap{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);text-align:center;z-index:10;pointer-events:none}
+#cube-face-label{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);letter-spacing:4px;color:var(--accent);line-height:1;transition:color .4s,opacity .25s;opacity:1}
+#cube-sub-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-top:8px;transition:color .4s,opacity .25s;opacity:1}
+#cube-progress-wrap{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:10}
+#cube-progress-track{width:200px;height:1px;background:var(--ln)}
+#cube-progress-fill{height:100%;background:var(--accent);width:0%;transition:width .1s,background .4s}
+#cube-progress-pct{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--t4);min-width:32px}
+
+/* ═══════════════ PARTICLE SECTION ═══════════════ */
+#particle-section{position:relative;height:300vh;background:var(--bg);border-top:1px solid var(--ln);transition:background .5s}
+#particle-sticky{position:sticky;top:0;width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+#particle-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+#particle-eyebrow{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--t3);white-space:nowrap;z-index:10;display:flex;align-items:center;gap:16px}
+#particle-eyebrow::before,#particle-eyebrow::after{content:'';width:40px;height:1px;background:var(--ln);display:block}
+#particle-label-wrap{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);text-align:center;z-index:10;pointer-events:none}
+#particle-face-label{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);letter-spacing:4px;color:var(--accent);line-height:1;transition:color .4s,opacity .25s}
+#particle-sub-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-top:8px;transition:color .4s,opacity .25s}
+#particle-progress-wrap{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:10}
+#particle-progress-track{width:200px;height:1px;background:var(--ln)}
+#particle-progress-fill{height:100%;background:var(--accent);width:0%;transition:width .1s,background .4s}
+#particle-progress-pct{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--t4);min-width:32px}
+
+/* ═══════════════ MANIFESTO ═══════════════ */
+#manifesto{background:var(--t1);color:#111;padding:100px 48px 120px;position:relative}
+.mani-bg-letter{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(300px,45vw,700px);color:rgba(0,0,0,.04);line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;white-space:nowrap}
+.mani-inner{max-width:960px;margin:0 auto;position:relative;z-index:2}
+.mani-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:#888;margin-bottom:48px;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:16px}
+.mani-eyebrow::after{content:'';flex:1;height:1px;background:#bbb}
+.mani-headline-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:80px;align-items:start}
+@media(max-width:700px){.mani-headline-wrap{grid-template-columns:1fr}}
+.mani-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,9vw,130px);line-height:.88}
+.mani-head .outline{-webkit-text-stroke:2px #111;color:transparent;display:block}
+.mani-head-right{padding:16px 0 0 32px;border-left:2px solid #111}
+.mani-pull{font-family:'Playfair Display',serif;font-size:clamp(15px,2vw,22px);font-style:italic;line-height:1.7;color:#333;margin-bottom:24px}
+.mani-stat-row{display:flex;gap:32px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid #ccc}
+.m-stat-val{font-family:'Bebas Neue',sans-serif;font-size:40px;color:#111;line-height:1}
+.m-stat-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#777;font-family:'Space Mono',monospace;margin-top:3px}
+.mani-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #111}
+@media(max-width:700px){.mani-grid{grid-template-columns:1fr}}
+.mani-item{padding:36px 32px;border-right:1px solid #ccc;border-bottom:1px solid #ccc;position:relative;overflow:hidden}
+.mani-item:nth-child(even){border-right:none}
+.mani-item:nth-child(3),.mani-item:nth-child(4){border-bottom:none}
+.mani-item-num{font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(0,0,0,.06);position:absolute;top:-10px;right:16px;line-height:1;pointer-events:none}
+.mani-item-head{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:14px;position:relative;z-index:1}
+.mani-item-body{font-size:11px;line-height:1.9;color:#444;letter-spacing:.3px;position:relative;z-index:1}
+
+/* ═══════════════ IDENTITY MATRIX ═══════════════ */
+#matrix-break{background:var(--bg);padding:80px 48px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);transition:background .5s}
+.mb-inner{max-width:960px;margin:0 auto}
+.mb-label{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--t3);margin-bottom:40px;font-family:'Space Mono',monospace}
+.mb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--ln)}
+@media(max-width:700px){.mb-grid{grid-template-columns:repeat(3,1fr)}}
+.mb-cell{padding:24px 20px;border-right:1px solid var(--ln2);border-bottom:1px solid var(--ln2);position:relative;overflow:hidden;cursor:default;transition:background .2s}
+.mb-cell:hover{background:var(--hover)}
+.mb-cell-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--t5);line-height:1;margin-bottom:8px;transition:color .2s}
+.mb-cell:hover .mb-cell-num{color:var(--accent)}
+.mb-cell-name{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;color:var(--t3);transition:color .2s}
+.mb-cell:hover .mb-cell-name{color:var(--t1)}
+.mb-cell-sub{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-top:4px;font-family:'Space Mono',monospace;line-height:1.6}
+.mb-cell-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--accent);width:0%;transition:width .6s ease,background .4s}
+.mb-readiness{position:absolute;top:12px;right:12px;font-family:'Space Mono',monospace;font-size:8px;color:var(--t4);letter-spacing:1px;transition:color .2s}
+.mb-cell:hover .mb-readiness{color:var(--accent)}
+
+/* ═══════════════ HOW IT WORKS ═══════════════ */
+#how{background:var(--bg);padding:100px 48px;transition:background .5s}
+.how-inner{max-width:960px;margin:0 auto}
+.sec-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--t3);margin-bottom:48px;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:16px}
+.sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--ln)}
+.sec-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,9vw,120px);line-height:.88;letter-spacing:1px;margin-bottom:64px;color:var(--t1)}
+.sec-head .ac{color:var(--accent);transition:color .4s}
+.phase-timeline{position:relative}
+.phase-timeline::before{content:'';position:absolute;left:40px;top:0;bottom:0;width:1px;background:linear-gradient(var(--accent),var(--ln));z-index:0}
+.pt-item{display:grid;grid-template-columns:80px 1fr auto;border-bottom:1px solid var(--ln2);position:relative;z-index:1;transition:background .2s}
+.pt-item:last-child{border-bottom:none}
+.pt-item:hover{background:var(--hover)}
+.pt-node{display:flex;flex-direction:column;align-items:center;padding:32px 0}
+.pt-circle{width:16px;height:16px;border:2px solid var(--accent);border-radius:50%;background:var(--bg);margin-top:6px;transition:background .2s}
+.pt-item:hover .pt-circle{background:var(--accent)}
+.pt-body{padding:32px 40px 32px 32px}
+.pt-tag{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'Space Mono',monospace}
+.pt-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;margin-bottom:10px;color:var(--t1)}
+.pt-desc{font-size:11px;line-height:1.9;color:var(--t3);max-width:480px}
+.pt-price{padding:32px 0 32px 28px;border-left:1px solid var(--ln2);display:flex;flex-direction:column;align-items:flex-end;justify-content:center;min-width:140px}
+.pt-price-val{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--accent);line-height:1}
+.pt-price-sub{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace;text-align:right;margin-top:4px;line-height:1.6}
+
+/* ═══════════════ BRUTALIST DIVIDER ═══════════════ */
+.brut-divider{background:var(--accent);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;transition:background .4s}
+.bd-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,64px);color:var(--cta-fg);letter-spacing:2px;line-height:1}
+.bd-action{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;background:var(--bg);color:var(--accent);padding:14px 28px;cursor:pointer;border:none;font-weight:700;transition:all .2s}
+.bd-action:hover{opacity:.85;transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(0,0,0,.25)}
+.bd-shape{opacity:.3;color:var(--cta-fg)}
+
+/* ═══════════════ VIZ BREAK ═══════════════ */
+#viz-break{background:var(--card);padding:80px 48px;border-top:1px solid var(--ln);transition:background .5s}
+.vb-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+@media(max-width:700px){.vb-inner{grid-template-columns:1fr}}
+.vb-eyebrow{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--t3);margin-bottom:20px;font-family:'Space Mono',monospace}
+.vb-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,7vw,88px);line-height:.9;margin-bottom:20px;color:var(--t1)}
+.vb-head span{color:var(--accent);transition:color .4s}
+.vb-body{font-size:11px;line-height:1.9;color:var(--t3)}
+.vb-bars{display:flex;flex-direction:column;border:1px solid var(--ln)}
+.vb-row{display:grid;grid-template-columns:120px 1fr 52px;gap:12px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--ln2);transition:background .15s}
+.vb-row:last-child{border-bottom:none}
+.vb-row:hover{background:var(--hover)}
+.vb-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--t3);transition:color .2s}
+.vb-row:hover .vb-name{color:var(--t1)}
+.vb-track{height:2px;background:var(--ln);flex:1}
+.vb-fill{height:100%;background:var(--accent);width:0%;transition:width 1.4s cubic-bezier(.22,1,.36,1),background .4s}
+.vb-fill.orange{background:#ff6b1a}
+.vb-pct{font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-align:right}
+.vb-row:hover .vb-pct{color:var(--accent)}
+
+/* ═══════════════ SHOWCASE ═══════════════ */
+#showcase{background:var(--card);padding:100px 48px;border-top:1px solid var(--ln);transition:background .5s}
+.showcase-inner{max-width:980px;margin:0 auto}
+.client-header{display:grid;grid-template-columns:auto 1fr;border:1px solid var(--ln);margin-bottom:48px;overflow:hidden}
+.client-badge-block{background:var(--accent);padding:28px 32px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;min-width:140px;transition:background .4s}
+.client-badge-num{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--cta-fg);line-height:1}
+.client-badge-txt{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--cta-fg);font-family:'Space Mono',monospace;font-weight:700}
+.client-info{padding:24px 32px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.client-name{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px;color:var(--t1)}
+.client-meta-row{display:flex;gap:24px;flex-wrap:wrap}
+.client-meta-item{display:flex;flex-direction:column;gap:3px}
+.cmi-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace}
+.cmi-val{font-size:11px;letter-spacing:1px;color:var(--t2);font-family:'Space Mono',monospace}
+.tab-row{display:flex;border:1px solid var(--ln);overflow:hidden;margin-bottom:32px}
+.tab{flex:1;padding:13px 16px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);cursor:pointer;border:none;background:transparent;border-right:1px solid var(--ln);transition:all .2s;text-align:center}
+.tab:last-child{border-right:none}
+.tab:hover{color:var(--t1);background:var(--hover)}
+.tab.active{background:var(--accent);color:var(--cta-fg);font-weight:700}
+.tab-content{display:none}.tab-content.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.resume-pill-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.r-pill{border:1px solid var(--ln);padding:7px 16px;font-size:8px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Space Mono',monospace;color:var(--t3);transition:all .15s;background:transparent}
+.r-pill:hover{border-color:var(--t4);color:var(--t2)}
+.r-pill.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.resume-mock{border:1px solid var(--ln);overflow:hidden}
+.rm-header{background:var(--t1);color:#111;display:grid;grid-template-columns:1fr auto}
+.rm-header-left{padding:28px 32px;border-right:1px solid #ccc}
+.rm-identity-chip{display:inline-block;background:#111;color:var(--accent);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;padding:4px 12px;margin-bottom:12px;font-weight:700;transition:color .4s}
+.rm-name{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;color:#111;line-height:1}
+.rm-role{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#666;margin-top:6px;font-family:'Space Mono',monospace}
+.rm-header-right{padding:28px 24px;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center;min-width:200px}
+.rm-contact-item{font-size:9px;color:#666;font-family:'Space Mono',monospace}
+.rm-score-strip{background:var(--bg);padding:10px 32px;display:flex;align-items:center;gap:20px}
+.rss-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace;flex-shrink:0}
+.rss-bar{flex:1;height:2px;background:var(--ln)}
+.rss-fill{height:100%;background:var(--accent);transition:width 1s ease,background .4s}
+.rss-val{font-size:9px;color:var(--accent);font-family:'Space Mono',monospace;flex-shrink:0}
+.rm-body{padding:28px 32px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;background:var(--card)}
+@media(max-width:650px){.rm-body{grid-template-columns:1fr}}
+.rm-sec-label{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;font-family:'Space Mono',monospace;padding-bottom:6px;border-bottom:1px solid var(--ln2)}
+.rm-item{margin-bottom:18px}
+.rm-item-head{font-size:12px;font-weight:600;margin-bottom:3px;color:var(--t1)}
+.rm-item-sub{font-size:9px;color:var(--t3);letter-spacing:1.5px;margin-bottom:6px;font-family:'Space Mono',monospace;text-transform:uppercase}
+.rm-item-desc{font-size:10px;color:var(--t3);line-height:1.9}
+.rm-skill-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.rm-skill{font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--ln);padding:4px 10px;color:var(--t3);font-family:'Space Mono',monospace}
+.roadmap-visual{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:650px){.roadmap-visual{grid-template-columns:1fr}}
+.rv-card{border:1px solid var(--ln);padding:20px 22px;position:relative;overflow:hidden}
+.rv-card::before{content:'';position:absolute;top:0;left:0;width:3px;bottom:0;background:var(--accent);transition:background .4s}
+.rv-badge{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;font-family:'Space Mono',monospace;padding-left:12px}
+.rv-head{font-family:'Bebas Neue',sans-serif;font-size:20px;margin-bottom:8px;padding-left:12px;color:var(--t1)}
+.rv-body{font-size:10px;color:var(--t3);line-height:1.9;padding-left:12px}
+.cert-list{margin-top:20px;border:1px solid var(--ln)}
+.cert-item{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--ln2)}
+.cert-item:last-child{border-bottom:none}
+.cert-dot{width:6px;height:6px;background:var(--accent);flex-shrink:0}
+.cert-name{font-size:11px;color:var(--t1)}
+.cert-tag{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace}
+.cheat-box{border:1px solid var(--ln);overflow:hidden}
+.cheat-item{padding:24px 28px;border-bottom:1px solid var(--ln2);transition:background .15s}
+.cheat-item:last-child{border-bottom:none}
+.cheat-item:hover{background:var(--hover)}
+.cheat-q{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:12px}
+.cheat-a{font-size:10px;line-height:1.95;color:var(--t3);padding-left:14px;border-left:1px solid var(--ln)}
+.latex-preview{background:#050505;border:1px solid var(--ln);padding:24px;font-family:'Space Mono',monospace;font-size:9px;color:var(--t4);line-height:1.9;overflow-x:auto;white-space:pre}
+.lp-comment{color:var(--t5)}.lp-cmd{color:var(--accent)}.lp-text{color:var(--t4)}
+
+/* ═══════════════ PRICING ═══════════════ */
+#pricing{background:var(--bg);padding:100px 48px;transition:background .5s}
+.pricing-inner{max-width:960px;margin:0 auto}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:2px solid var(--t2);overflow:hidden;margin-bottom:40px}
+@media(max-width:800px){.price-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.price-grid{grid-template-columns:1fr}}
+.price-card{padding:32px 24px;border-right:1px solid var(--ln);cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
+.price-card:last-child{border-right:none}
+.price-card:hover{background:var(--hover)}
+.price-card.featured{background:var(--accent);transition:background .4s}
+.price-card.featured .price-tag,.price-card.featured .price-name,.price-card.featured .price-feature{color:var(--cta-fg)!important}
+.price-card.featured .price-amt{color:var(--cta-fg)!important}
+.price-card.featured .price-feature{border-color:rgba(0,0,0,.15)!important}
+.price-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:20px;font-family:'Space Mono',monospace;display:block}
+.price-amt{font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--accent);line-height:1;margin-bottom:6px;transition:color .4s}
+.price-name{font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:18px;color:var(--t1)}
+.price-feature{font-size:9px;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;padding:7px 0;border-top:1px solid var(--ln);font-family:'Space Mono',monospace;line-height:1.8}
+
+/* ═══════════════ FUNNEL ═══════════════ */
+#funnel-section{background:var(--card);padding:100px 48px;border-top:1px solid var(--ln);transition:background .5s}
+.funnel-inner{max-width:780px;margin:0 auto}
+.funnel-phase{display:none;animation:fadeUp .35s ease both}
+.funnel-phase.active{display:block}
+.progress-wrap{margin-bottom:48px}
+.p-steps{display:flex;gap:8px;margin-bottom:10px}
+.p-dot{height:2px;width:32px;background:var(--ln);transition:background .3s,width .3s}
+.p-dot.done{background:var(--t4)}.p-dot.active{background:var(--accent);width:52px}
+.p-lbl{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace}
+.f-eyebrow{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace;display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.f-eyebrow::after{content:'';flex:1;height:1px;background:var(--ln)}
+.f-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,90px);line-height:.9;margin-bottom:36px;color:var(--t1)}
+.f-head .ac{color:var(--accent)}
+.f-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace;display:block;margin-bottom:8px}
+.f-input{width:100%;background:var(--bg);border:1px solid var(--ln);color:var(--t1);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:13px 15px;outline:none;transition:border-color .2s,background .5s}
+.f-input:focus{border-color:var(--accent)}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.f-grid.one{grid-template-columns:1fr}
+@media(max-width:560px){.f-grid{grid-template-columns:1fr}}
+.f-group{display:flex;flex-direction:column}
+.f-divider{height:1px;background:var(--ln);margin:24px 0}
+.persona-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+@media(max-width:480px){.persona-g{grid-template-columns:1fr}}
+.p-card{border:1px solid var(--ln);padding:16px 18px;cursor:pointer;transition:all .15s;position:relative}
+.p-card:hover{border-color:var(--t4)}
+.p-card.sel{border-color:var(--accent);background:var(--accent-dim)}
+.p-card.sel::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent);font-size:9px;font-family:'Space Mono',monospace}
+.p-card-lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;font-family:'Space Mono',monospace}
+.p-card-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--t1)}
+.pill-g{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+.pill{border:1px solid var(--ln);padding:7px 15px;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;font-family:'Space Mono',monospace;color:var(--t3);transition:all .15s;background:transparent;user-select:none}
+.pill:hover{border-color:var(--t4);color:var(--t2)}
+.pill.sel{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.terminal{background:#040404;border:1px solid var(--ln);padding:16px 20px;font-family:'Space Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1px;line-height:2;margin-bottom:20px}
+.terminal .dim{color:var(--t4)}
+.cursor{display:inline-block;width:6px;height:10px;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.info-row{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:32px}
+.info-item{display:flex;flex-direction:column;gap:3px}
+.info-lbl{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'Space Mono',monospace}
+.info-val{font-size:11px;color:var(--accent);font-family:'Space Mono',monospace}
+.pay-box{border:2px solid var(--t2);background:var(--bg);padding:24px 28px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:14px}
+.pay-amt{font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--accent);line-height:1}
+.pay-desc{font-size:9px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;margin-top:4px;font-family:'Space Mono',monospace}
+.hw-box{border-left:2px solid #ff6b1a;padding:12px 18px;background:rgba(255,107,26,.04);margin-bottom:20px}
+.hw-box p{font-size:10px;line-height:1.9;color:var(--t3)}
+.hw-box strong{color:#ff6b1a}
+.scorecard-wrap{border:2px solid var(--t2);overflow:hidden;margin-bottom:24px}
+.sc-head{background:var(--t1);color:#111;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+.sc-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px}
+.sc-id{font-size:8px;letter-spacing:2px;color:#555;font-family:'Space Mono',monospace}
+.sc-row{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--ln2);transition:background .15s}
+.sc-row:last-child{border-bottom:none}
+.sc-row:hover{background:var(--hover)}
+.sc-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--t4);width:32px;flex-shrink:0}
+.sc-info{flex:1}
+.sc-name{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--t1)}
+.sc-sub{font-size:8px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;font-family:'Space Mono',monospace}
+.sc-bar-wrap{width:140px;flex-shrink:0}
+.sc-bar-lbl{font-size:7px;color:var(--t3);text-transform:uppercase;margin-bottom:4px;display:flex;justify-content:space-between;font-family:'Space Mono',monospace}
+.sc-track{height:2px;background:var(--ln);overflow:hidden}
+.sc-fill{height:100%;width:0%;transition:width 1.4s cubic-bezier(.22,1,.36,1),background .4s;background:var(--accent)}
+.sc-fill.r{background:#ff6b1a}
+.bundle-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:2px solid var(--t2);overflow:hidden;margin-bottom:24px}
+@media(max-width:600px){.bundle-g{grid-template-columns:1fr}}
+.b-card{padding:24px 20px;border-right:1px solid var(--ln);cursor:pointer;transition:all .15s}
+.b-card:last-child{border-right:none}
+.b-card:hover{background:var(--hover)}
+.b-card.sel{background:var(--accent)}
+.b-card.sel .b-price,.b-card.sel .b-name,.b-card.sel .b-tag,.b-card.sel .b-feat,.b-card.sel .b-desc{color:var(--cta-fg)!important}
+.b-card.sel .b-feat{border-color:rgba(0,0,0,.12)!important}
+.b-tag{font-size:7px;letter-spacing:3px;text-transform:uppercase;background:var(--ln);color:var(--t3);padding:3px 8px;display:inline-block;margin-bottom:14px;font-family:'Space Mono',monospace}
+.b-name{font-family:'Bebas Neue',sans-serif;font-size:24px;margin-bottom:4px;color:var(--t1)}
+.b-price{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent);line-height:1;margin-bottom:10px}
+.b-desc{font-size:9px;color:var(--t3);line-height:1.8;margin-bottom:10px}
+.b-feat{font-size:8px;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;padding:5px 0;border-top:1px solid var(--ln);font-family:'Space Mono',monospace}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+@media(max-width:480px){.id-grid{grid-template-columns:1fr}}
+.id-card{border:1px solid var(--ln);padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;position:relative}
+.id-card:hover{border-color:var(--t4)}
+.id-card.sel{border-color:var(--accent);background:var(--accent-dim)}
+.id-card.off{opacity:.25;pointer-events:none}
+.id-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--t4);width:36px;flex-shrink:0;line-height:1}
+.id-card.sel .id-num{color:var(--accent)}
+.id-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--t1)}
+.id-sub{font-size:7px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;font-family:'Space Mono',monospace}
+.id-check{position:absolute;top:9px;right:11px;color:var(--accent);font-size:8px;font-family:'Space Mono',monospace;display:none}
+.id-card.sel .id-check{display:block}
+.sel-ctr{font-size:9px;letter-spacing:2px;color:var(--t3);margin-bottom:14px;text-transform:uppercase;font-family:'Space Mono',monospace}
+.sel-ctr em{color:var(--accent);font-style:normal;font-weight:700}
+.btn{display:inline-block;padding:15px 32px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border:none;font-weight:700;transition:all .2s}
+.btn-acid{background:var(--accent);color:var(--cta-fg)}
+.btn-acid:hover{background:var(--t1);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--accent)}
+.btn-ghost{background:transparent;color:var(--t1);border:2px solid var(--t2)}
+.btn-ghost:hover{background:var(--t1);color:var(--bg)}
+.btn-pay{background:var(--accent);color:var(--cta-fg);position:relative;overflow:hidden}
+.btn-pay::after{content:'';position:absolute;inset:0;background:var(--t1);transform:translateX(-101%);transition:transform .25s ease;z-index:0}
+.btn-pay:hover::after{transform:translateX(0)}
+.btn-pay span{position:relative;z-index:1}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.err{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#ff6b1a;margin-bottom:12px;display:none;font-family:'Space Mono',monospace}
+.err.show{display:block}
+.final-wrap{text-align:center;padding:60px 20px}
+.final-icon{font-size:48px;display:block;margin-bottom:24px;animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.glitch{position:relative;display:inline-block;color:var(--t1)}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;font-family:'Bebas Neue',sans-serif;font-size:inherit}
+.glitch::before{color:var(--accent);animation:g1 4s infinite;clip-path:polygon(0 25%,100% 25%,100% 45%,0 45%)}
+.glitch::after{color:#ff6b1a;animation:g2 4s infinite;clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%)}
+@keyframes g1{0%,88%,100%{transform:translate(0)}90%{transform:translate(-3px,1px)}92%{transform:translate(3px,-1px)}}
+@keyframes g2{0%,88%,100%{transform:translate(0)}91%{transform:translate(3px,2px)}93%{transform:translate(-2px,-1px)}}
+
+/* ═══════════════ FOUNDERS ═══════════════ */
+#founders{background:var(--t1);color:#111;padding:100px 48px;position:relative;overflow:hidden}
+.founders-bg-geo{position:absolute;right:-120px;top:50%;transform:translateY(-50%);opacity:.03;pointer-events:none}
+.founders-inner{max-width:760px;margin:0 auto;position:relative;z-index:2}
+.founders-pre{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:#888;margin-bottom:48px;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:16px}
+.founders-pre::before{content:'';width:28px;height:1px;background:#888}
+.founders-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,9vw,110px);line-height:.88;margin-bottom:64px;color:#111}
+.founders-head .out{-webkit-text-stroke:2px #111;color:transparent}
+.founders-body p{font-family:'Playfair Display',serif;font-size:clamp(15px,1.8vw,19px);line-height:1.95;color:#333;margin-bottom:28px;font-style:italic}
+.founders-body p strong{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#111}
+.declarations{border:2px solid #111;margin:56px 0}
+.decl{padding:20px 28px;border-bottom:1px solid #ccc;display:flex;gap:20px;align-items:flex-start}
+.decl:last-child{border-bottom:none}
+.decl-n{font-family:'Bebas Neue',sans-serif;font-size:48px;color:rgba(0,0,0,.08);flex-shrink:0;line-height:1}
+.decl-t{font-size:11px;line-height:1.9;padding-top:10px;color:#444}
+.decl-t strong{color:#111}
+.founders-sign{margin-top:56px}
+.sign-bar{width:60px;height:2px;background:#111;margin-bottom:18px}
+.sign-name{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#111}
+.sign-title{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#777;font-family:'Space Mono',monospace;margin-top:6px}
+.sign-co{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#999;font-family:'Space Mono',monospace;margin-top:3px}
+
+/* ═══════════════ FOOTER ═══════════════ */
+#footer{background:var(--bg);border-top:1px solid var(--ln);padding:64px 48px 40px;transition:background .5s}
+.footer-inner{max-width:960px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;margin-bottom:56px;padding-bottom:56px;border-bottom:1px solid var(--ln)}
+@media(max-width:700px){.footer-top{grid-template-columns:1fr}}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;line-height:1;color:var(--t1)}
+.footer-logo span{color:var(--accent)}
+.footer-tagline{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);font-family:'Space Mono',monospace;margin-top:10px}
+.footer-col-head{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--t3);margin-bottom:16px;font-family:'Space Mono',monospace}
+.alias-row{display:flex;gap:12px;align-items:baseline;margin-bottom:8px}
+.alias-role{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--t4);font-family:'Space Mono',monospace;min-width:90px}
+.alias-email{font-size:9px;color:var(--t3);font-family:'Space Mono',monospace}
+.footer-nav-link{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t4);font-family:'Space Mono',monospace;margin-bottom:10px;cursor:pointer;transition:color .2s}
+.footer-nav-link:hover{color:var(--t2)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:8px;letter-spacing:2px;color:var(--t4);text-transform:uppercase;font-family:'Space Mono',monospace}
+</style>
+</head>
+<body>
+
+<!-- THEME SWITCHER -->
+<div id="theme-sw">
+  <span class="sw-lbl">THEME</span>
+  <div class="sw-dot on" data-t="acid" onclick="setTheme('acid')"></div>
+  <div class="sw-dot" data-t="red" onclick="setTheme('red')"></div>
+  <div class="sw-dot" data-t="blue" onclick="setTheme('blue')"></div>
+  <div class="sw-dot" data-t="amber" onclick="setTheme('amber')"></div>
+  <span class="sw-name" id="sw-name">ACID GREEN</span>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo" onclick="s2('hero')">AXON<span>.</span>DRAFT</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="s2('manifesto')">MANIFESTO</button>
+    <button class="nav-link" onclick="s2('showcase')">SHOWCASE</button>
+    <button class="nav-link" onclick="s2('pricing')">PRICING</button>
+    <button class="nav-link" onclick="s2('founders')">FOUNDER</button>
+    <button class="nav-cta" onclick="s2('funnel-section')">START DIAGNOSTIC</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+  <div style="position:absolute;inset:0;overflow:hidden">
+    <canvas id="matrix-canvas"></canvas>
+    <div class="geo-circle gc1"></div><div class="geo-circle gc2"></div><div class="geo-circle gc3"></div>
+    <div class="geo-rect gr1"></div><div class="geo-rect gr2"></div>
+    <div class="scanlines"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">THE WHITE MOTH INC. — AXON DRAFT SYSTEM v1.0</div>
+    <div class="hero-headline">
+      <div class="hero-type">
+        <span class="l1">YOU ARE</span><span class="l2">NOT ONE</span><span class="l3">RÉSUMÉ.</span>
+      </div>
+      <div class="hero-statbar">
+        <div class="hero-stat"><div class="hs-val">8</div><div class="hs-label">Identities in your data</div></div>
+        <div class="hero-stat"><div class="hs-val">6s</div><div class="hs-label">Recruiter scan time</div></div>
+        <div class="hero-stat"><div class="hs-val">1%</div><div class="hs-label">Submit the right one</div></div>
+        <div class="hero-stat"><div class="hs-val">₹29</div><div class="hs-label">To see your map</div></div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <p class="hero-sub">You are a <em>portfolio of professional frequencies</em>. A single career history contains 5–8 distinct identities. Most applicants submit one. <em>The 1% submits the right one.</em></p>
+      <div class="hero-cta-group">
+        <button class="hero-cta" onclick="s2('funnel-section')">REQUEST DIAGNOSTIC ACCESS <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 3l5 4-5 4" stroke="currentColor" stroke-width="1.5"/></svg></button>
+        <div class="hero-tag">₹29 — APPLIED TO YOUR FINAL BUNDLE</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <div class="ticker-item">IDENTITY AS INFRASTRUCTURE <span>◆</span></div><div class="ticker-item">DECOUPLE YOUR CAREER HISTORY <span>◆</span></div><div class="ticker-item">AXON ENGINE — n8n + CLAUDE + OVERLEAF <span>◆</span></div><div class="ticker-item">THE WHITE MOTH INC. <span>◆</span></div><div class="ticker-item">8 PROFESSIONAL FREQUENCIES <span>◆</span></div><div class="ticker-item">SURGICAL ONBOARDING <span>◆</span></div>
+      <div class="ticker-item">IDENTITY AS INFRASTRUCTURE <span>◆</span></div><div class="ticker-item">DECOUPLE YOUR CAREER HISTORY <span>◆</span></div><div class="ticker-item">AXON ENGINE — n8n + CLAUDE + OVERLEAF <span>◆</span></div><div class="ticker-item">THE WHITE MOTH INC. <span>◆</span></div><div class="ticker-item">8 PROFESSIONAL FREQUENCIES <span>◆</span></div><div class="ticker-item">SURGICAL ONBOARDING <span>◆</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3D IDENTITY CUBE — between Hero & Manifesto ═══ -->
+<div id="cube-section">
+  <canvas id="cube-canvas"></canvas>
+  <div id="cube-eyebrow">DRAG TO EXPLORE YOUR 6 PROFESSIONAL IDENTITIES</div>
+  <div id="cube-label-wrap">
+    <div id="cube-face-label">THE BINARY</div>
+    <div id="cube-sub-label">SDE / BACKEND · 72% READINESS</div>
+  </div>
+  <div id="cube-progress-wrap">
+    <div id="cube-progress-track"><div id="cube-progress-fill"></div></div>
+    <div id="cube-progress-pct">DRAG OR SCROLL</div>
+  </div>
+</div>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section id="manifesto">
+  <div class="mani-bg-letter">IAS</div>
+  <div class="mani-inner">
+    <div class="mani-eyebrow reveal">IDENTITY AS INFRASTRUCTURE — THE AXON PHILOSOPHY</div>
+    <div class="mani-headline-wrap">
+      <div class="mani-head reveal">ONE<br><span class="outline">HISTORY.</span><br>INFINITE<br>IDENTITIES.</div>
+      <div class="mani-head-right reveal rd1">
+        <p class="mani-pull">"Your career history is source code. It can be compiled into multiple deployable artefacts — each one optimised for a different runtime environment."</p>
+        <div class="mani-stat-row">
+          <div class="m-stat"><div class="m-stat-val">8</div><div class="m-stat-label">avg. identities per profile</div></div>
+          <div class="m-stat"><div class="m-stat-val">6s</div><div class="m-stat-label">recruiter scan window</div></div>
+          <div class="m-stat"><div class="m-stat-val">1</div><div class="m-stat-label">most applicants submit</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mani-grid">
+      <div class="mani-item reveal"><div class="mani-item-num">01</div><div class="mani-item-head">THE PROBLEM</div><div class="mani-item-body">Every student submits the same generalist résumé to every job. A recruiter spends 6 seconds on your document. That document was built for everyone — which means it was built for no one.</div></div>
+      <div class="mani-item reveal rd1"><div class="mani-item-num">02</div><div class="mani-item-head">THE DIAGNOSIS</div><div class="mani-item-body">Your career history is not a document. It is raw signal — a dataset of skills, experiences, and interests that can be compiled into multiple professional identities. You've only ever compiled it once.</div></div>
+      <div class="mani-item reveal rd2"><div class="mani-item-num">03</div><div class="mani-item-head">THE PRESCRIPTION</div><div class="mani-item-body">We run your data through the Axon Engine. We map your professional frequencies. We show you the 8 doors your background can open — then we build the right key for each door you choose.</div></div>
+      <div class="mani-item reveal rd3"><div class="mani-item-num">04</div><div class="mani-item-head">THE ARCHITECTURE</div><div class="mani-item-body">Industrial-grade LaTeX documents. Role-targeted language. ATS-bypass engineering. Not a template. Not a tool. Career infrastructure — built to last a lifetime.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PARTICLE AXON REVEAL — between Manifesto & Identity Matrix ═══ -->
+<div id="particle-section">
+  <div id="particle-sticky">
+    <canvas id="particle-canvas"></canvas>
+    <div id="particle-eyebrow">SCROLL TO DECODE YOUR IDENTITY</div>
+    <div id="particle-label-wrap">
+      <div id="particle-face-label">YOUR IDENTITY</div>
+      <div id="particle-sub-label">SCROLL TO REVEAL</div>
+    </div>
+    <div id="particle-progress-wrap">
+      <div id="particle-progress-track"><div id="particle-progress-fill"></div></div>
+      <div id="particle-progress-pct">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ IDENTITY MATRIX ═══ -->
+<div id="matrix-break" style="background:var(--bg);padding:80px 48px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);transition:background .5s">
+  <div class="mb-inner">
+    <div class="mb-label">YOUR PROFESSIONAL FREQUENCIES — IDENTITY MATRIX</div>
+    <div class="mb-grid" id="mb-grid">
+      <div class="mb-cell" data-pct="72"><div class="mb-cell-num">01</div><div class="mb-cell-name">THE BINARY</div><div class="mb-cell-sub">SDE / Backend</div><div class="mb-readiness">72%</div><div class="mb-cell-bar"></div></div>
+      <div class="mb-cell" data-pct="85"><div class="mb-cell-num">02</div><div class="mb-cell-name">THE SILICON</div><div class="mb-cell-sub">Embedded / ECE</div><div class="mb-readiness">85%</div><div class="mb-cell-bar"></div></div>
+      <div class="mb-cell" data-pct="38"><div class="mb-cell-num">03</div><div class="mb-cell-name">THE ANALYTICAL</div><div class="mb-cell-sub">Data / FinTech</div><div class="mb-readiness">38%</div><div class="mb-cell-bar"></div></div>
+      <div class="mb-cell" data-pct="61"><div class="mb-cell-num">04</div><div class="mb-cell-name">THE CREATIVE</div><div class="mb-cell-sub">UI/UX / Brand</div><div class="mb-readiness">61%</div><div class="mb-cell-bar"></div></div>
+      <div class="mb-cell" data-pct="54"><div class="mb-cell-num">05</div><div class="mb-cell-name">THE OPERATIONAL</div><div class="mb-cell-sub">Product / Ops</div><div class="mb-readiness">54%</div><div class="mb-cell-bar"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how">
+  <div class="how-inner">
+    <div class="sec-eyebrow">THE PROCESS — 4 SURGICAL PHASES</div>
+    <div class="sec-head reveal">THE <span class="ac">AXON</span><br>ENGINE.</div>
+    <div class="phase-timeline reveal">
+      <div class="pt-item"><div class="pt-node"><div class="pt-circle"></div></div><div class="pt-body"><div class="pt-tag">PHASE 01 — FREE</div><div class="pt-name">DIGITAL DNA INTAKE</div><div class="pt-desc">You submit your raw data — background, projects, and 3 personal interests. Your hidden professional signals are being read.</div></div><div class="pt-price"><div class="pt-price-val">₹0</div><div class="pt-price-sub">No commitment<br>required</div></div></div>
+      <div class="pt-item"><div class="pt-node"><div class="pt-circle"></div></div><div class="pt-body"><div class="pt-tag">PHASE 02 — ₹29</div><div class="pt-name">THE DIAGNOSTIC LOCK</div><div class="pt-desc">A micro-fee that filters signal from noise. Funds a manual + AI hybrid audit and positions the resulting report as a professional prescription.</div></div><div class="pt-price"><div class="pt-price-val">₹29</div><div class="pt-price-sub">Applied to<br>final bundle</div></div></div>
+      <div class="pt-item"><div class="pt-node"><div class="pt-circle"></div></div><div class="pt-body"><div class="pt-tag">PHASE 03 — YOUR MAP</div><div class="pt-name">THE REVERT LINK</div><div class="pt-desc">Within 24H, your Eligibility Scorecard arrives — 5 to 8 identity variations, readiness percentages, project prescriptions, and a cert skill-gap audit.</div></div><div class="pt-price"><div class="pt-price-val">24H</div><div class="pt-price-sub">Via<br>architect@</div></div></div>
+      <div class="pt-item"><div class="pt-node"><div class="pt-circle"></div></div><div class="pt-body"><div class="pt-tag">PHASE 04 — FINAL BUNDLE</div><div class="pt-name">THE COMPILATION</div><div class="pt-desc">You select your identities. The Axon Engine compiles them into industrial LaTeX. A private Notion dashboard delivers your PDFs, source code, roadmap, and cheat sheets.</div></div><div class="pt-price"><div class="pt-price-val">₹470+</div><div class="pt-price-sub">Deposit<br>applied</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="brut-divider">
+  <div class="bd-text">YOU HAVE 8 DOORS.<br>WE BUILD THE KEYS.</div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <svg width="70" height="70" viewBox="0 0 70 70" class="bd-shape"><rect x="5" y="5" width="60" height="60" fill="none" stroke="currentColor" stroke-width="2"/><line x1="5" y1="5" x2="65" y2="65" stroke="currentColor" stroke-width="1"/><line x1="65" y1="5" x2="5" y2="65" stroke="currentColor" stroke-width="1"/></svg>
+    <svg width="70" height="70" viewBox="0 0 70 70" class="bd-shape"><circle cx="35" cy="35" r="30" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="35" cy="35" r="15" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="35" cy="35" r="4" fill="currentColor"/></svg>
+  </div>
+  <button class="bd-action" onclick="s2('funnel-section')">START FOR ₹29 →</button>
+</div>
+
+<!-- VIZ BREAK -->
+<div id="viz-break">
+  <div class="vb-inner">
+    <div class="vb-left">
+      <div class="vb-eyebrow">SAMPLE IDENTITY READINESS MATRIX</div>
+      <div class="vb-head reveal">YOUR<br><span>GOLD-<br>MINE.</span></div>
+      <p class="vb-body reveal rd1">Every diagnostic reveals a unique readiness profile. The 38% isn't failure — it's a roadmap. Two certs and one project later, it becomes 80%.</p>
+    </div>
+    <div class="vb-right">
+      <div class="vb-bars" id="vb-bars">
+        <div class="vb-row"><div class="vb-name">BINARY</div><div class="vb-track"><div class="vb-fill" data-w="72"></div></div><div class="vb-pct">72%</div></div>
+        <div class="vb-row"><div class="vb-name">SILICON</div><div class="vb-track"><div class="vb-fill" data-w="85"></div></div><div class="vb-pct">85%</div></div>
+        <div class="vb-row"><div class="vb-name">ANALYTICAL</div><div class="vb-track"><div class="vb-fill orange" data-w="38"></div></div><div class="vb-pct" style="color:#ff6b1a">38%</div></div>
+        <div class="vb-row"><div class="vb-name">CREATIVE</div><div class="vb-track"><div class="vb-fill" data-w="61"></div></div><div class="vb-pct">61%</div></div>
+        <div class="vb-row"><div class="vb-name">OPERATIONAL</div><div class="vb-track"><div class="vb-fill" data-w="54"></div></div><div class="vb-pct">54%</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SHOWCASE ═══ -->
+<section id="showcase">
+  <div class="showcase-inner">
+    <div class="sec-eyebrow">LIVE BUNDLE SHOWCASE — DEMO CLIENT</div>
+    <div class="sec-head reveal">WHAT YOU<br><span class="ac">ACTUALLY</span><br>RECEIVE.</div>
+    <div class="client-header reveal">
+      <div class="client-badge-block"><div class="client-badge-num">DM</div><div class="client-badge-txt">DEMO<br>CLIENT</div></div>
+      <div class="client-info">
+        <div class="client-name">ARJUN MEHTA</div>
+        <div class="client-meta-row">
+          <div class="client-meta-item"><div class="cmi-label">Background</div><div class="cmi-val">B.Tech ECE — SRM Institute</div></div>
+          <div class="client-meta-item"><div class="cmi-label">Interests</div><div class="cmi-val">Cricket · Finance · Gaming</div></div>
+          <div class="client-meta-item"><div class="cmi-label">Bundle</div><div class="cmi-val">Starter — 3 Identities</div></div>
+          <div class="client-meta-item"><div class="cmi-label">Delivery</div><div class="cmi-val">Notion Dashboard</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-row">
+      <button class="tab active" onclick="switchTab(this,'t-resume')">IDENTITY PDF</button>
+      <button class="tab" onclick="switchTab(this,'t-roadmap')">GROWTH ROADMAP</button>
+      <button class="tab" onclick="switchTab(this,'t-cheat')">CHEAT SHEET</button>
+      <button class="tab" onclick="switchTab(this,'t-latex')">LATEX SOURCE</button>
+    </div>
+    <div class="tab-content active" id="t-resume">
+      <div class="resume-pill-row">
+        <button class="r-pill active" onclick="switchResume(this,'r1')">01 — THE BINARY</button>
+        <button class="r-pill" onclick="switchResume(this,'r2')">03 — THE ANALYTICAL</button>
+        <button class="r-pill" onclick="switchResume(this,'r3')">05 — THE OPERATIONAL</button>
+      </div>
+      <div class="resume-mock" id="r1">
+        <div class="rm-header"><div class="rm-header-left"><div class="rm-identity-chip">THE BINARY — SDE IDENTITY</div><div class="rm-name">ARJUN MEHTA</div><div class="rm-role">Backend Engineering / Full-Stack Development</div></div><div class="rm-header-right"><div class="rm-contact-item">arjun.mehta@gmail.com</div><div class="rm-contact-item">+91 98765 43210</div><div class="rm-contact-item">github.com/arjunmehta</div><div class="rm-contact-item">Chennai, Tamil Nadu</div></div></div>
+        <div class="rm-score-strip"><div class="rss-label">Identity Readiness</div><div class="rss-bar"><div class="rss-fill" style="width:72%"></div></div><div class="rss-val">72%</div></div>
+        <div class="rm-body"><div><div class="rm-sec-label">TECHNICAL SKILLS</div><div class="rm-skill-wrap"><div class="rm-skill">Java</div><div class="rm-skill">Python</div><div class="rm-skill">C++</div><div class="rm-skill">Spring Boot</div><div class="rm-skill">REST APIs</div><div class="rm-skill">MySQL</div><div class="rm-skill">Git</div><div class="rm-skill">Docker</div></div><div class="rm-sec-label" style="margin-top:18px">PROJECTS</div><div class="rm-item"><div class="rm-item-head">CricketIQ — Predictive Match Analytics Engine</div><div class="rm-item-sub">Personal Project — Dec 2024</div><div class="rm-item-desc">Built Python + Django backend ingesting 10 years of IPL data with 81% accuracy. Deployed REST API serving 200+ daily queries.</div></div><div class="rm-item"><div class="rm-item-head">UniVerse — Campus Event Management App</div><div class="rm-item-sub">Team Lead — SRM Hackathon Winner, Feb 2024</div><div class="rm-item-desc">Led 4-member team to build Flutter + Firebase app, 1,200 active users.</div></div></div>
+        <div><div class="rm-sec-label">EXPERIENCE</div><div class="rm-item"><div class="rm-item-head">Backend Engineering Intern</div><div class="rm-item-sub">Finova Tech Pvt. Ltd. — May–Jul 2024</div><div class="rm-item-desc">Developed 3 microservices reducing API latency by 34%. 92% test coverage.</div></div><div class="rm-sec-label" style="margin-top:18px">EDUCATION</div><div class="rm-item"><div class="rm-item-head">B.Tech — Electronics & Communication Engineering</div><div class="rm-item-sub">SRM Institute — 2021–2025</div><div class="rm-item-desc">CGPA: 8.7 / 10 · DSA Club President · 500+ LeetCode problems</div></div><div class="rm-sec-label" style="margin-top:18px">AXON PRESCRIPTION</div><div class="rm-item" style="border-left:2px solid var(--accent-dim);padding-left:12px"><div class="rm-item-head" style="color:var(--accent);font-size:10px">NEXT STEP TO CLOSE GAP</div><div class="rm-item-desc">Add AWS Cloud Practitioner cert + deploy CricketIQ on Railway. Readiness: 72% → 88%.</div></div></div></div>
+      </div>
+      <div class="resume-mock" id="r2" style="display:none">
+        <div class="rm-header"><div class="rm-header-left"><div class="rm-identity-chip">THE ANALYTICAL — DATA / FINTECH IDENTITY</div><div class="rm-name">ARJUN MEHTA</div><div class="rm-role">Data Analyst / FinTech Research Associate</div></div><div class="rm-header-right"><div class="rm-contact-item">arjun.mehta@gmail.com</div><div class="rm-contact-item">+91 98765 43210</div><div class="rm-contact-item">linkedin.com/in/arjunmehta</div><div class="rm-contact-item">Chennai, Tamil Nadu</div></div></div>
+        <div class="rm-score-strip"><div class="rss-label">Identity Readiness</div><div class="rss-bar"><div class="rss-fill" style="width:38%;background:#ff6b1a"></div></div><div class="rss-val" style="color:#ff6b1a">38%</div></div>
+        <div class="rm-body"><div><div class="rm-sec-label">ANALYTICAL SKILLS</div><div class="rm-skill-wrap"><div class="rm-skill">Python</div><div class="rm-skill">Pandas</div><div class="rm-skill">SQL</div><div class="rm-skill">Tableau</div><div class="rm-skill">Scikit-learn</div><div class="rm-skill">Excel</div></div><div class="rm-sec-label" style="margin-top:18px">PROJECTS</div><div class="rm-item"><div class="rm-item-head">IPL Auction ROI Optimizer</div><div class="rm-item-sub">Axon-Prescribed Project</div><div class="rm-item-desc">Regression model scoring undervalued IPL players using performance + salary data.</div></div></div>
+        <div><div class="rm-sec-label">AXON PRESCRIPTION</div><div class="rm-item" style="border-left:2px solid rgba(255,107,26,.3);padding-left:12px"><div class="rm-item-head" style="color:#ff6b1a;font-size:10px">GAP TO CLOSE (8 WEEKS)</div><div class="rm-item-desc">Complete Python for Finance cert + publish IPL project with live Streamlit URL. Readiness: 38% → 74%.</div></div></div></div>
+      </div>
+      <div class="resume-mock" id="r3" style="display:none">
+        <div class="rm-header"><div class="rm-header-left"><div class="rm-identity-chip">THE OPERATIONAL — PRODUCT OPS IDENTITY</div><div class="rm-name">ARJUN MEHTA</div><div class="rm-role">Product Operations / Associate Program Manager</div></div><div class="rm-header-right"><div class="rm-contact-item">arjun.mehta@gmail.com</div><div class="rm-contact-item">+91 98765 43210</div><div class="rm-contact-item">linkedin.com/in/arjunmehta</div><div class="rm-contact-item">Chennai, Tamil Nadu</div></div></div>
+        <div class="rm-score-strip"><div class="rss-label">Identity Readiness</div><div class="rss-bar"><div class="rss-fill" style="width:54%"></div></div><div class="rss-val">54%</div></div>
+        <div class="rm-body"><div><div class="rm-sec-label">CORE COMPETENCIES</div><div class="rm-skill-wrap"><div class="rm-skill">Product Thinking</div><div class="rm-skill">Agile/Scrum</div><div class="rm-skill">User Research</div><div class="rm-skill">Notion</div><div class="rm-skill">Figma</div></div><div class="rm-sec-label" style="margin-top:18px">PROJECTS</div><div class="rm-item"><div class="rm-item-head">UniVerse — Campus App (Product Lead)</div><div class="rm-item-sub">SRM — 1,200 users · Feb 2024</div><div class="rm-item-desc">Defined product roadmap, led 40 user interviews. Reduced booking friction 60%.</div></div></div>
+        <div><div class="rm-sec-label">AXON PRESCRIPTION</div><div class="rm-item" style="border-left:2px solid var(--accent-dim);padding-left:12px"><div class="rm-item-head" style="color:var(--accent);font-size:10px">NEXT STEP</div><div class="rm-item-desc">Document Discord community growth as a PM case study. Readiness: 54% → 80%.</div></div></div></div>
+      </div>
+    </div>
+    <div class="tab-content" id="t-roadmap">
+      <div class="roadmap-visual" style="margin-bottom:24px">
+        <div class="rv-card"><div class="rv-badge">Identity: Analytical · Interest: Cricket + Finance</div><div class="rv-head">IPL AUCTION ROI OPTIMIZER</div><div class="rv-body">Regression model + Streamlit dashboard. Closes FinTech gap in 3 weeks.</div></div>
+        <div class="rv-card"><div class="rv-badge">Identity: Binary · Interest: Cricket</div><div class="rv-head">CRICKETIQ PREDICTION API</div><div class="rv-body">Django REST API + 10yr T20 data. Docker + Railway deployment.</div></div>
+        <div class="rv-card"><div class="rv-badge">Identity: Operational · Interest: Gaming</div><div class="rv-head">DISCORD OPS CASE STUDY</div><div class="rv-body">Document 0→820 member growth as a PM portfolio piece.</div></div>
+        <div class="rv-card"><div class="rv-badge">Bonus · All Identities</div><div class="rv-head">GITHUB SIGNAL ARCHITECTURE</div><div class="rv-body">Identity-specific pinned repos and professional READMEs.</div></div>
+      </div>
+      <div class="cert-list">
+        <div class="cert-item"><div class="cert-dot"></div><div><div class="cert-name">Google Data Analytics Professional Certificate</div><div style="font-size:9px;color:var(--t3);font-family:'Space Mono',monospace;margin-top:3px">Coursera · 6 months</div></div><div class="cert-tag">Priority 1</div></div>
+        <div class="cert-item"><div class="cert-dot"></div><div><div class="cert-name">SQL for Data Science — UC Davis</div><div style="font-size:9px;color:var(--t3);font-family:'Space Mono',monospace;margin-top:3px">Coursera · 4 weeks</div></div><div class="cert-tag">Priority 2</div></div>
+        <div class="cert-item"><div class="cert-dot"></div><div><div class="cert-name">AWS Cloud Practitioner Essentials</div><div style="font-size:9px;color:var(--t3);font-family:'Space Mono',monospace;margin-top:3px">AWS Skill Builder · 6 hours</div></div><div class="cert-tag">Priority 3</div></div>
+        <div class="cert-item"><div class="cert-dot" style="background:#ff6b1a"></div><div><div class="cert-name">Product Management Fundamentals — Reforge</div><div style="font-size:9px;color:var(--t3);font-family:'Space Mono',monospace;margin-top:3px">Reforge · 8 weeks</div></div><div class="cert-tag">Priority 4</div></div>
+      </div>
+    </div>
+    <div class="tab-content" id="t-cheat">
+      <div class="cheat-box">
+        <div class="cheat-item"><div class="cheat-q">Q: "Walk me through a project where you owned the full backend."</div><div class="cheat-a">Lead with CricketIQ. "I built and deployed a prediction API ingesting 10 years of T20 data — 200+ daily queries in production. Reduced pipeline latency 40% by caching pre-computed feature vectors." Then pause.</div></div>
+        <div class="cheat-item"><div class="cheat-q">Q: "Why backend over frontend?"</div><div class="cheat-a">"My internship showed me how a 34% latency improvement in one microservice changed the UX for 10,000 users without a single line of frontend code. Backend is where real product decisions live."</div></div>
+        <div class="cheat-item"><div class="cheat-q">Q: "Tell me about a time you debugged a production issue."</div><div class="cheat-a">"Three hours before a major campus event, our notification service failed silently. Traced it to a race condition in the Firebase listener. Fixed and redeployed in 40 minutes. 800 students got their confirmations."</div></div>
+        <div class="cheat-item"><div class="cheat-q">Q: "What's your approach to writing clean code?"</div><div class="cheat-a">"90%+ test coverage not because it's a metric, but because it forces modular design. Code is read ten times more than it's written. If the function name doesn't tell you what it does, it's not named right."</div></div>
+      </div>
+    </div>
+    <div class="tab-content" id="t-latex">
+      <div class="latex-preview"><span class="lp-comment">% ═══════════════════════════════
+% AXON DRAFT ENGINE — THE BINARY
+% Client: Arjun Mehta | 2025-03-24
+% ═══════════════════════════════</span>
+
+<span class="lp-cmd">\documentclass</span><span class="lp-text">[10pt,a4paper]{article}</span>
+<span class="lp-cmd">\usepackage</span><span class="lp-text">[margin=0.7in]{geometry}</span>
+<span class="lp-cmd">\usepackage</span><span class="lp-text">{enumitem,hyperref,fontenc}</span>
+<span class="lp-cmd">\usepackage</span><span class="lp-text">[dvipsnames]{xcolor}</span>
+<span class="lp-cmd">\begin</span><span class="lp-text">{document}</span>
+<span class="lp-cmd">\begin</span><span class="lp-text">{center}</span>
+  <span class="lp-text">{\Huge\textbf{ARJUN MEHTA}}\\[4pt]</span>
+  <span class="lp-text">{\small Backend Engineering \textbar{} Full-Stack}</span>
+<span class="lp-cmd">\end</span><span class="lp-text">{center}</span>
+<span class="lp-cmd">\hrule\vspace</span><span class="lp-text">{6pt}</span>
+<span class="lp-cmd">\section*</span><span class="lp-text">{Technical Skills}</span>
+<span class="lp-cmd">\textbf</span><span class="lp-text">{Languages:} Java, Python, C++, SQL</span>
+<span class="lp-comment">% [Full 247-line source delivered via Notion]</span>
+<span class="lp-cmd">\end</span><span class="lp-text">{document}</span></div>
+      <p style="font-size:9px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-top:12px">Full source in your Notion dashboard. Lifelong ownership.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section id="pricing">
+  <div class="pricing-inner">
+    <div class="sec-eyebrow">PRICING ARCHITECTURE</div>
+    <div class="sec-head reveal">PICK YOUR<br><span class="ac">BATTLEFRONT.</span></div>
+    <div class="price-grid reveal">
+      <div class="price-card"><span class="price-tag">ENTRY</span><div class="price-amt">₹29</div><div class="price-name">THE AUDIT</div><div class="price-feature">Eligibility Scorecard<br>8-Identity Map<br>Project Prescriptions<br>Skill-Gap Audit<br>Applied as deposit</div></div>
+      <div class="price-card"><span class="price-tag">FOCUSED</span><div class="price-amt">₹199</div><div class="price-name">THE SINGLE</div><div class="price-feature">1 Identity PDF<br>LaTeX Source Code<br>Growth Roadmap<br>Interview Cheat Sheet</div></div>
+      <div class="price-card featured"><span class="price-tag">MOST POPULAR</span><div class="price-amt">₹499</div><div class="price-name">THE STARTER</div><div class="price-feature">3 Identity PDFs<br>LaTeX Source Code<br>Growth Roadmap<br>Cheat Sheets<br>Notion Dashboard</div></div>
+      <div class="price-card"><span class="price-tag">MAXIMUM RANGE</span><div class="price-amt">₹799</div><div class="price-name">THE ELITE PIVOT</div><div class="price-feature">5+ Identity PDFs<br>3 Revisions Included<br>Manual Recruiter Audit<br>Notion Dashboard<br>Priority Delivery</div></div>
+    </div>
+    <div style="text-align:center"><button class="btn btn-acid" onclick="s2('funnel-section')">BEGIN YOUR DIAGNOSTIC — ₹29 →</button></div>
+  </div>
+</section>
+
+<!-- ═══ FUNNEL ═══ -->
+<section id="funnel-section">
+  <div class="funnel-inner">
+    <div class="sec-eyebrow">THE DIAGNOSTIC — START HERE</div>
+    <div class="sec-head reveal">REQUEST<br><span class="ac">ACCESS.</span></div>
+    <div class="funnel-phase active" id="fp1">
+      <div class="progress-wrap"><div class="p-steps"><div class="p-dot active"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div></div><div class="p-lbl">PHASE 01 — DIGITAL DNA INTAKE</div></div>
+      <div class="terminal"><span class="dim">> AXON ENGINE v1.0 — INITIALISED</span><br>> AWAITING SUBJECT DATA<span class="cursor"></span></div>
+      <div class="f-eyebrow">Contact Layer</div>
+      <div class="f-grid"><div class="f-group"><label class="f-label">Full Name</label><input class="f-input" id="i-name" type="text" placeholder="Your full name"></div><div class="f-group"><label class="f-label">Email</label><input class="f-input" id="i-email" type="email" placeholder="your@email.com"></div></div>
+      <div class="f-grid"><div class="f-group"><label class="f-label">Phone</label><input class="f-input" id="i-phone" type="tel" placeholder="+91 00000 00000"></div><div class="f-group"><label class="f-label">LinkedIn / Portfolio</label><input class="f-input" id="i-url" type="text" placeholder="linkedin.com/in/you"></div></div>
+      <div class="f-divider"></div>
+      <div class="f-eyebrow">Stage Identification</div>
+      <div class="persona-g"><div class="p-card" data-v="pre-final" onclick="selP(this)"><div class="p-card-lbl">Stage 01</div><div class="p-card-name">PRE-FINAL</div></div><div class="p-card" data-v="finalist" onclick="selP(this)"><div class="p-card-lbl">Stage 02</div><div class="p-card-name">FINALIST</div></div><div class="p-card" data-v="professional" onclick="selP(this)"><div class="p-card-lbl">Stage 03</div><div class="p-card-name">PROFESSIONAL</div></div><div class="p-card" data-v="switcher" onclick="selP(this)"><div class="p-card-lbl">Stage 04</div><div class="p-card-name">ROLE-SWITCHER</div></div></div>
+      <div class="f-grid"><div class="f-group"><label class="f-label">Target Domain</label><select class="f-input" id="i-dom"><option value="">— Select Domain —</option><option value="sde">SDE / Software Engineering</option><option value="core">Core ECE / EEE</option><option value="data">Data Analyst / Scientist</option><option value="product">Product Management</option><option value="finance">Finance / FinTech</option><option value="ux">UI/UX Design</option></select></div><div class="f-group"><label class="f-label">Academic Background</label><input class="f-input" id="i-bg" type="text" placeholder="e.g., B.Tech ECE, SRM"></div></div>
+      <div class="f-divider"></div>
+      <div class="f-eyebrow">Interest DNA — Select up to 3</div>
+      <div class="pill-g"><div class="pill" onclick="selI(this)">FITNESS</div><div class="pill" onclick="selI(this)">GAMING</div><div class="pill" onclick="selI(this)">FINANCE</div><div class="pill" onclick="selI(this)">MUSIC</div><div class="pill" onclick="selI(this)">ART</div><div class="pill" onclick="selI(this)">CRICKET</div><div class="pill" onclick="selI(this)">TRAVEL</div><div class="pill" onclick="selI(this)">HEALTH-TECH</div><div class="pill" onclick="selI(this)">INVESTING</div><div class="pill" onclick="selI(this)">CONTENT</div><div class="pill" onclick="selI(this)">AUTOMOTIVE</div><div class="pill" onclick="selI(this)">FASHION</div></div>
+      <div class="f-divider"></div>
+      <div class="f-eyebrow">Experience Audit</div>
+      <div class="f-grid one"><div class="f-group"><label class="f-label">Your 3 best projects or experiences</label><textarea class="f-input" id="i-proj" placeholder="1. Built a Flutter app&#10;2. Completed DSA (500+ problems)&#10;3. Internship at XYZ" style="min-height:90px;resize:vertical"></textarea></div></div>
+      <div class="err" id="e1">— Complete required fields: name, email, stage, domain</div>
+      <div class="btn-row"><button class="btn btn-acid" onclick="g2()">SUBMIT TO AXON ENGINE →</button></div>
+    </div>
+    <div class="funnel-phase" id="fp2">
+      <div class="progress-wrap"><div class="p-steps"><div class="p-dot done"></div><div class="p-dot active"></div><div class="p-dot"></div><div class="p-dot"></div></div><div class="p-lbl">PHASE 02 — DIAGNOSTIC LOCK</div></div>
+      <div class="info-row" id="p2info"></div>
+      <div class="terminal"><span class="dim">> PROFILE INGESTED — </span><span id="t2n">SUBJECT</span><br><span class="dim">> SCANNING FREQUENCIES...</span><br>> IDENTITIES DETECTED: <span style="letter-spacing:4px">████ ████</span> [LOCKED]<span class="cursor"></span></div>
+      <div class="f-head">DATA INGESTED.<br><span class="ac">GOLDMINE DETECTED.</span></div>
+      <p style="font-size:11px;line-height:2;color:var(--t3);margin-bottom:24px;max-width:520px">Our engine has found 5–8 professional frequencies. A ₹29 audit fee unlocks your full Identity Map — applied to your final bundle.</p>
+      <div class="pay-box"><div><div class="pay-amt">₹29</div><div class="pay-desc">Diagnostic Audit — Applied to final bundle</div></div><div style="font-size:8px;letter-spacing:2px;color:var(--t3);line-height:2.2;text-transform:uppercase;font-family:'Space Mono',monospace">Unlocks 8-identity map<br>Custom project pivot<br>Skill-gap audit</div></div>
+      <div class="hw-box"><p><strong>THE HARD WORK CLAUSE:</strong> Axon Draft provides the architecture and blueprint. The study, building, and credential earning is yours to own.</p></div>
+      <div class="btn-row"><button class="btn btn-pay" onclick="g3()"><span>PAY ₹29 — UNLOCK MY MAP →</span></button><button class="btn btn-ghost" onclick="g1()">← BACK</button></div>
+    </div>
+    <div class="funnel-phase" id="fp3">
+      <div class="progress-wrap"><div class="p-steps"><div class="p-dot done"></div><div class="p-dot done"></div><div class="p-dot active"></div><div class="p-dot"></div></div><div class="p-lbl">PHASE 03 — THE REVERT LINK</div></div>
+      <div class="f-head">YOUR<br><span class="ac">IDENTITY MAP.</span></div>
+      <p style="font-size:11px;line-height:2;color:var(--t3);margin-bottom:24px">These are your professional frequencies. Pick your battlefronts.</p>
+      <div class="scorecard-wrap">
+        <div class="sc-head"><div class="sc-title">AXON IDENTITY MATRIX</div><div class="sc-id" id="sc-sub">SUBJECT: —</div></div>
+        <div class="sc-row"><div class="sc-num">01</div><div class="sc-info"><div class="sc-name">THE BINARY</div><div class="sc-sub">SDE / Backend Engineering</div></div><div class="sc-bar-wrap"><div class="sc-bar-lbl"><span>Readiness</span><span style="color:var(--accent)">72%</span></div><div class="sc-track"><div class="sc-fill" data-w="72"></div></div></div></div>
+        <div class="sc-row"><div class="sc-num">02</div><div class="sc-info"><div class="sc-name">THE SILICON</div><div class="sc-sub">Embedded / Core ECE</div></div><div class="sc-bar-wrap"><div class="sc-bar-lbl"><span>Readiness</span><span style="color:var(--accent)">85%</span></div><div class="sc-track"><div class="sc-fill" data-w="85"></div></div></div></div>
+        <div class="sc-row"><div class="sc-num">03</div><div class="sc-info"><div class="sc-name">THE ANALYTICAL</div><div class="sc-sub">Data / FinTech</div></div><div class="sc-bar-wrap"><div class="sc-bar-lbl"><span>Readiness</span><span style="color:#ff6b1a">38%</span></div><div class="sc-track"><div class="sc-fill r" data-w="38"></div></div></div></div>
+        <div class="sc-row"><div class="sc-num">04</div><div class="sc-info"><div class="sc-name">THE CREATIVE</div><div class="sc-sub">UI/UX / Brand Design</div></div><div class="sc-bar-wrap"><div class="sc-bar-lbl"><span>Readiness</span><span style="color:var(--accent)">61%</span></div><div class="sc-track"><div class="sc-fill" data-w="61"></div></div></div></div>
+        <div class="sc-row"><div class="sc-num">05</div><div class="sc-info"><div class="sc-name">THE OPERATIONAL</div><div class="sc-sub">Product Ops</div></div><div class="sc-bar-wrap"><div class="sc-bar-lbl"><span>Readiness</span><span style="color:var(--accent)">54%</span></div><div class="sc-track"><div class="sc-fill" data-w="54"></div></div></div></div>
+      </div>
+      <div class="f-eyebrow" style="margin-bottom:16px">Select Your Bundle</div>
+      <div class="bundle-g"><div class="b-card" onclick="selB(this,'audit',29,0)"><div class="b-tag">DEPOSIT</div><div class="b-name">THE AUDIT</div><div class="b-price">₹29</div><div class="b-desc">Diagnostic only.</div><div class="b-feat">Deposit applied</div></div><div class="b-card" onclick="selB(this,'starter',470,3)"><div class="b-tag">POPULAR</div><div class="b-name">STARTER</div><div class="b-price">₹470</div><div class="b-desc">3 identities + Full Starter Drive.</div><div class="b-feat">₹29 applied</div><div class="b-feat">3 PDFs + Source</div></div><div class="b-card" onclick="selB(this,'elite',770,5)"><div class="b-tag">ELITE</div><div class="b-name">ELITE PIVOT</div><div class="b-price">₹770</div><div class="b-desc">5+ identities + revisions.</div><div class="b-feat">₹29 applied</div><div class="b-feat">Recruiter Audit</div></div></div>
+      <div class="err" id="e3">— Select a bundle to continue</div>
+      <div class="btn-row"><button class="btn btn-acid" onclick="g4()">CONFIRM BUNDLE →</button><button class="btn btn-ghost" onclick="g2()">← BACK</button></div>
+    </div>
+    <div class="funnel-phase" id="fp4">
+      <div class="progress-wrap"><div class="p-steps"><div class="p-dot done"></div><div class="p-dot done"></div><div class="p-dot done"></div><div class="p-dot active"></div></div><div class="p-lbl">PHASE 04 — COMPILATION ORDER</div></div>
+      <div class="f-head">PICK YOUR<br><span class="ac">WEAPONS.</span></div>
+      <p style="font-size:11px;line-height:2;color:var(--t3);margin-bottom:20px">Select your identities to compile into LaTeX.</p>
+      <div class="sel-ctr">Selected: <em id="sct">0</em> / <em id="smx">3</em></div>
+      <div class="id-grid"><div class="id-card" onclick="selId(this,1)"><div class="id-num">01</div><div><div class="id-name">THE BINARY</div><div class="id-sub">SDE / Backend</div></div><div class="id-check">✓ LOCKED</div></div><div class="id-card" onclick="selId(this,2)"><div class="id-num">02</div><div><div class="id-name">THE SILICON</div><div class="id-sub">Embedded / ECE</div></div><div class="id-check">✓ LOCKED</div></div><div class="id-card" onclick="selId(this,3)"><div class="id-num">03</div><div><div class="id-name">THE ANALYTICAL</div><div class="id-sub">Data / FinTech</div></div><div class="id-check">✓ LOCKED</div></div><div class="id-card" onclick="selId(this,4)"><div class="id-num">04</div><div><div class="id-name">THE CREATIVE</div><div class="id-sub">UI/UX / Brand</div></div><div class="id-check">✓ LOCKED</div></div><div class="id-card" onclick="selId(this,5)"><div class="id-num">05</div><div><div class="id-name">THE OPERATIONAL</div><div class="id-sub">Product / Ops</div></div><div class="id-check">✓ LOCKED</div></div></div>
+      <div class="pay-box"><div><div class="pay-amt" id="fp4p">₹470</div><div class="pay-desc" id="fp4b">Starter Bundle — ₹29 applied</div></div><p style="font-size:8px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;font-family:'Space Mono',monospace">Delivered via Notion by ops@whitemoth.inc</p></div>
+      <div class="err" id="e4">— Select the required number of identities</div>
+      <div class="btn-row"><button class="btn btn-pay" onclick="gFin()"><span>COMPILE MY IDENTITIES →</span></button><button class="btn btn-ghost" onclick="g3()">← BACK</button></div>
+    </div>
+    <div class="funnel-phase" id="fpfin">
+      <div class="final-wrap">
+        <span class="final-icon">⚡</span>
+        <div class="glitch" data-text="AXON INITIATED" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,120px);line-height:.9;letter-spacing:2px;display:block;margin-bottom:28px">AXON INITIATED</div>
+        <p style="font-size:11px;line-height:2.2;color:var(--t3);max-width:460px;margin:0 auto 36px">Your compilation order has been received.</p>
+        <div class="terminal" style="max-width:500px;margin:0 auto 28px;text-align:left">> ORDER CONFIRMED — <span id="fn">—</span><br>> ENGINE: n8n + CLAUDE + OVERLEAF<br>> STATUS: <span style="color:var(--accent)">PROCESSING</span><span class="cursor"></span></div>
+        <div class="info-row" style="justify-content:center"><div class="info-item"><div class="info-lbl">Bundle</div><div class="info-val" id="finb">—</div></div><div class="info-item"><div class="info-lbl">Identities</div><div class="info-val" id="fini">—</div></div><div class="info-item"><div class="info-lbl">Email</div><div class="info-val" id="fine">—</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section id="founders">
+  <div class="founders-bg-geo"><svg width="600" height="600" viewBox="0 0 600 600"><rect x="50" y="50" width="500" height="500" fill="none" stroke="#000" stroke-width="1"/><circle cx="300" cy="300" r="200" fill="none" stroke="#000" stroke-width=".5"/><line x1="50" y1="50" x2="550" y2="550" stroke="#000" stroke-width=".5"/><line x1="550" y1="50" x2="50" y2="550" stroke="#000" stroke-width=".5"/></svg></div>
+  <div class="founders-inner">
+    <div class="founders-pre reveal">A NOTE FROM THE ARCHITECT — THE WHITE MOTH INC.</div>
+    <div class="founders-head reveal">WE BUILT<br>THIS<br>BECAUSE<br><span class="out">WE NEEDED IT.</span></div>
+    <div class="founders-body">
+      <p class="reveal">"I was a finalist with a 8.6 CGPA, three solid projects, and a resume that looked exactly like everyone else's. I applied to 40 companies. I heard back from four. <strong>The problem was my identity architecture.</strong>"</p>
+      <p class="reveal rd1">"My background could open doors to backend engineering, embedded systems, data analytics, and product management — but I was submitting one document trying to speak to all of them. <strong>The hiring system rewards signal precision.</strong>"</p>
+      <p class="reveal rd2">"Axon Draft is an identity compiler. We treat your career history like an engineer treats source code. <strong>Your runtime is the recruiter's 6-second scan.</strong>"</p>
+    </div>
+    <div class="declarations reveal">
+      <div class="decl"><div class="decl-n">I</div><div class="decl-t"><strong>We believe every student contains multitudes.</strong> The generalist résumé is an engineering failure — we refuse to ship it.</div></div>
+      <div class="decl"><div class="decl-n">II</div><div class="decl-t"><strong>The ₹29 matters more than the ₹799.</strong> The person who pays for a diagnosis has already decided to take their career seriously.</div></div>
+      <div class="decl"><div class="decl-n">III</div><div class="decl-t"><strong>We believe in the Hard Work Clause.</strong> We give you the blueprint. The building is yours to do.</div></div>
+      <div class="decl"><div class="decl-n">IV</div><div class="decl-t"><strong>This is a system upgrade.</strong> The LaTeX source code is yours forever.</div></div>
+    </div>
+    <div class="founders-sign reveal"><div class="sign-bar"></div><div class="sign-name">THE ARCHITECT</div><div class="sign-title">Founder — Axon Draft</div><div class="sign-co">The White Moth Inc. / architect@whitemoth.inc</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div><div class="footer-logo">AXON<span>.</span>DRAFT</div><div class="footer-tagline">Career Infrastructure<br>By The White Moth Inc.</div></div>
+      <div><div class="footer-col-head">Operational Aliases</div><div class="alias-row"><div class="alias-role">Master Admin</div><div class="alias-email">admin.axon@whitemoth.inc</div></div><div class="alias-row"><div class="alias-role">The System</div><div class="alias-email">axon@whitemoth.inc</div></div><div class="alias-row"><div class="alias-role">The Expert</div><div class="alias-email">architect@whitemoth.inc</div></div><div class="alias-row"><div class="alias-role">Production</div><div class="alias-email">ops@whitemoth.inc</div></div></div>
+      <div><div class="footer-col-head">Navigation</div><div class="footer-nav-link" onclick="s2('manifesto')">Manifesto</div><div class="footer-nav-link" onclick="s2('how')">How It Works</div><div class="footer-nav-link" onclick="s2('showcase')">Bundle Showcase</div><div class="footer-nav-link" onclick="s2('pricing')">Pricing</div><div class="footer-nav-link" onclick="s2('funnel-section')">Start Diagnostic</div><div class="footer-nav-link" onclick="s2('founders')">Founder's Note</div></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">© 2025 The White Moth Inc. — All identities reserved.</div><div class="footer-copy">AXON DRAFT SYSTEM v1.0</div></div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// THEME SYSTEM
+// ═══════════════════════════════════════════
+const THEMES={acid:'ACID GREEN',red:'CRIMSON RED',blue:'ELECTRIC BLUE',amber:'AMBER GOLD'};
+const THEME_ORDER=['acid','red','blue','amber'];
+const themeCallbacks=[];
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.sw-dot').forEach(d=>d.classList.toggle('on',d.dataset.t===t));
+  document.getElementById('sw-name').textContent=THEMES[t];
+  localStorage.setItem('axon-theme',t);
+  themeCallbacks.forEach(fn=>fn(t));
+}
+(function(){
+  const saved=localStorage.getItem('axon-theme');
+  let t;
+  if(saved&&THEMES[saved]){const others=THEME_ORDER.filter(x=>x!==saved);t=others[Math.floor(Math.random()*others.length)];}
+  else t=THEME_ORDER[Math.floor(Math.random()*THEME_ORDER.length)];
+  setTheme(t);
+})();
+
+function getAccentHex(){return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#c9f040';}
+
+// ═══════════════════════════════════════════
+// HERO MATRIX CANVAS
+// ═══════════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('matrix-canvas');
+  const ctx=canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const chars='01アイウエオAXONDRAFT◆▲■IDENTITY0123456789';
+  let drops=Array(Math.floor(window.innerWidth/22)).fill(1);
+  window.addEventListener('resize',()=>{drops=Array(Math.floor(window.innerWidth/22)).fill(1);});
+  setInterval(()=>{
+    const s=getComputedStyle(document.documentElement);
+    ctx.fillStyle=s.getPropertyValue('--mx-bg').trim()||'rgba(6,6,6,.06)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=s.getPropertyValue('--mx-col').trim()||'rgba(201,240,64,.18)';
+    ctx.font='13px Space Mono,monospace';
+    drops.forEach((y,i)=>{
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*22,y*13);
+      if(y*13>canvas.height&&Math.random()>.975)drops[i]=0;
+      drops[i]++;
+    });
+  },80);
+})();
+
+// ═══════════════════════════════════════════
+// 3D IDENTITY CUBE (Hero → Manifesto)
+// Drag + auto-rotate, face-texture labels
+// ═══════════════════════════════════════════
+(function(){
+  const FACES=[
+    {name:'THE BINARY',     sub:'SDE / BACKEND',      pct:'72%'},
+    {name:'THE SILICON',    sub:'EMBEDDED / ECE',      pct:'85%'},
+    {name:'THE ANALYTICAL', sub:'DATA / FINTECH',      pct:'38%'},
+    {name:'THE CREATIVE',   sub:'UI/UX / BRAND',       pct:'61%'},
+    {name:'THE OPERATIONAL',sub:'PRODUCT / OPS',       pct:'54%'},
+    {name:'THE ARCHITECT',  sub:'SYSTEMS / INFRA',     pct:'77%'},
+  ];
+  // BoxGeometry face order: +x,-x,+y,-y,+z,-z
+  const faceOrder=[1,3,4,5,0,2];
+
+  const section=document.getElementById('cube-section');
+  const cnv=document.getElementById('cube-canvas');
+  const faceLabel=document.getElementById('cube-face-label');
+  const subLabel=document.getElementById('cube-sub-label');
+  const pFill=document.getElementById('cube-progress-fill');
+  const pPct=document.getElementById('cube-progress-pct');
+
+  const renderer=new THREE.WebGLRenderer({canvas:cnv,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,1,0.1,100);
+  camera.position.set(0,0,5.5);
+
+  function resize(){
+    const w=section.offsetWidth,h=section.offsetHeight;
+    renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+  }
+  resize();window.addEventListener('resize',resize);
+
+  function makeTexture(label,sub,pct,accent){
+    const c=document.createElement('canvas');c.width=512;c.height=512;
+    const cx=c.getContext('2d');
+    cx.fillStyle='#080808';cx.fillRect(0,0,512,512);
+    // border
+    cx.strokeStyle=accent;cx.lineWidth=3;cx.strokeRect(12,12,488,488);
+    cx.strokeStyle='rgba(255,255,255,0.05)';cx.lineWidth=1;cx.strokeRect(26,26,460,460);
+    // corner ticks
+    [[12,12,52,12],[12,12,12,52],[500,12,460,12],[500,12,500,52],[12,500,52,500],[12,500,12,460],[500,500,460,500],[500,500,500,460]].forEach(([x1,y1,x2,y2])=>{cx.beginPath();cx.moveTo(x1,y1);cx.lineTo(x2,y2);cx.strokeStyle=accent;cx.lineWidth=2;cx.stroke();});
+    // pct badge
+    cx.fillStyle=accent;cx.fillRect(370,26,112,38);
+    cx.fillStyle='#000';cx.font='bold 20px Space Mono,monospace';cx.textAlign='center';cx.fillText(pct,426,51);
+    // dot grid
+    cx.fillStyle='rgba(255,255,255,0.04)';
+    for(let gx=60;gx<480;gx+=36) for(let gy=80;gy<480;gy+=36){cx.beginPath();cx.arc(gx,gy,1.5,0,Math.PI*2);cx.fill();}
+    // accent side bar
+    cx.fillStyle=accent;cx.fillRect(28,170,4,180);
+    // label
+    cx.fillStyle='#fff';cx.font='bold 48px Bebas Neue,sans-serif';cx.textAlign='left';
+    label.split(' ').forEach((w,i)=>cx.fillText(w,46,222+i*56));
+    // sub
+    cx.fillStyle=accent;cx.font='13px Space Mono,monospace';cx.fillText(sub,46,390);
+    // bottom rule + tag
+    cx.strokeStyle='rgba(255,255,255,0.07)';cx.lineWidth=1;cx.beginPath();cx.moveTo(28,420);cx.lineTo(484,420);cx.stroke();
+    cx.fillStyle='rgba(255,255,255,0.18)';cx.font='11px Space Mono,monospace';cx.fillText('AXON DRAFT — IDENTITY ENGINE',46,452);
+    return new THREE.CanvasTexture(c);
+  }
+
+  const geo=new THREE.BoxGeometry(2,2,2);
+  let materials=[];
+  let cube;
+
+  function buildMaterials(){
+    const a=getAccentHex();
+    materials=faceOrder.map(fi=>new THREE.MeshBasicMaterial({map:makeTexture(FACES[fi].name,FACES[fi].sub,FACES[fi].pct,a),side:THREE.FrontSide}));
+    if(cube)cube.material=materials;
+  }
+
+  buildMaterials();
+  cube=new THREE.Mesh(geo,materials);
+  scene.add(cube);
+
+  const eGeo=new THREE.EdgesGeometry(geo);
+  const eMat=new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.07});
+  cube.add(new THREE.LineSegments(eGeo,eMat));
+
+  // ambient particles
+  const pGeo=new THREE.BufferGeometry();
+  const pBuf=new Float32Array(300*3);
+  for(let i=0;i<300*3;i++)pBuf[i]=(Math.random()-.5)*16;
+  pGeo.setAttribute('position',new THREE.BufferAttribute(pBuf,3));
+  const pMat=new THREE.PointsMaterial({color:0xffffff,size:.025,transparent:true,opacity:.2});
+  const pts=new THREE.Points(pGeo,pMat);
+  scene.add(pts);
+
+  // drag
+  let isDragging=false,prevX=0,prevY=0,velX=0,velY=0;
+  let rotX=0.3,rotY=0.4;
+  let autoSpin=true;
+
+  cnv.addEventListener('mousedown',e=>{isDragging=true;prevX=e.clientX;prevY=e.clientY;autoSpin=false;});
+  cnv.addEventListener('touchstart',e=>{isDragging=true;prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;autoSpin=false;},{passive:true});
+  window.addEventListener('mouseup',()=>{isDragging=false;});
+  window.addEventListener('touchend',()=>{isDragging=false;});
+  window.addEventListener('mousemove',e=>{
+    if(!isDragging)return;
+    velX=(e.clientX-prevX)*0.01;velY=(e.clientY-prevY)*0.01;
+    rotY+=velX;rotX+=velY;prevX=e.clientX;prevY=e.clientY;
+    updateFaceLabel();
+  });
+  window.addEventListener('touchmove',e=>{
+    if(!isDragging)return;
+    velX=(e.touches[0].clientX-prevX)*0.01;velY=(e.touches[0].clientY-prevY)*0.01;
+    rotY+=velX;rotX+=velY;prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;
+    updateFaceLabel();
+  },{passive:true});
+
+  function updateFaceLabel(){
+    const y=((rotY%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    const fi=[0,1,2,3][Math.round(y/(Math.PI/2))%4];
+    faceLabel.textContent=FACES[fi].name;
+    subLabel.textContent=FACES[fi].sub+' · '+FACES[fi].pct+' READINESS';
+  }
+
+  themeCallbacks.push(()=>{setTimeout(buildMaterials,60);});
+
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    if(!isDragging){
+      if(autoSpin)rotY+=0.004;
+      velX*=0.92;velY*=0.92;
+      rotY+=velX;rotX+=velY;
+    }
+    rotX=Math.max(-Math.PI/2,Math.min(Math.PI/2,rotX));
+    cube.rotation.y+=(rotY-cube.rotation.y)*0.1;
+    cube.rotation.x+=(rotX-cube.rotation.x)*0.1;
+    cube.position.y=Math.sin(clock.getElapsedTime()*0.8)*0.06;
+    pts.rotation.y+=0.0004;
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+
+// ═══════════════════════════════════════════
+// PARTICLE AXON REVEAL (Manifesto → Matrix)
+// Phase 0→1: chaos assemble into "AXON"
+// Phase 1→2: AXON holds & shimmers
+// Phase 2→3: explode → identity nodes
+// ═══════════════════════════════════════════
+(function(){
+  const NODES=[
+    {label:'THE BINARY',     sub:'SDE / BACKEND',   pct:'72%',angle:0},
+    {label:'THE SILICON',    sub:'EMBEDDED / ECE',  pct:'85%',angle:60},
+    {label:'THE ANALYTICAL', sub:'DATA / FINTECH',  pct:'38%',angle:120},
+    {label:'THE CREATIVE',   sub:'UI/UX / BRAND',   pct:'61%',angle:180},
+    {label:'THE OPERATIONAL',sub:'PRODUCT / OPS',   pct:'54%',angle:240},
+    {label:'THE ARCHITECT',  sub:'SYSTEMS / INFRA', pct:'77%',angle:300},
+  ];
+
+  const section=document.getElementById('particle-section');
+  const sticky=document.getElementById('particle-sticky');
+  const cnv=document.getElementById('particle-canvas');
+  const fLabel=document.getElementById('particle-face-label');
+  const sLabel=document.getElementById('particle-sub-label');
+  const pFill=document.getElementById('particle-progress-fill');
+  const pPct=document.getElementById('particle-progress-pct');
+
+  const renderer=new THREE.WebGLRenderer({canvas:cnv,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(50,1,0.1,200);
+  camera.position.set(0,0,22);
+
+  function resize(){
+    const w=sticky.offsetWidth,h=sticky.offsetHeight;
+    renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+  }
+  resize();window.addEventListener('resize',resize);
+
+  // sample "AXON" text into point cloud
+  function sampleText(text,count){
+    const c=document.createElement('canvas');c.width=512;c.height=160;
+    const cx=c.getContext('2d');
+    cx.fillStyle='#fff';cx.font='bold 130px Bebas Neue,Arial Black,sans-serif';
+    cx.textAlign='center';cx.textBaseline='middle';
+    cx.fillText(text,256,80);
+    const img=cx.getImageData(0,0,512,160);
+    const pts=[];
+    for(let y=0;y<160;y+=2) for(let x=0;x<512;x+=2)
+      if(img.data[(y*512+x)*4+3]>128) pts.push([(x-256)/32,(80-y)/32]);
+    const out=[];
+    for(let i=0;i<count;i++){const p=pts[Math.floor(Math.random()*pts.length)];out.push(p[0],p[1],0);}
+    return out;
+  }
+
+  const N=3000;
+  const axonPos=new Float32Array(sampleText('AXON',N));
+  const chaosPos=new Float32Array(N*3);
+  for(let i=0;i<N*3;i+=3){
+    const r=12+Math.random()*8,θ=Math.random()*Math.PI*2,φ=Math.acos(2*Math.random()-1);
+    chaosPos[i]=r*Math.sin(φ)*Math.cos(θ);
+    chaosPos[i+1]=r*Math.sin(φ)*Math.sin(θ);
+    chaosPos[i+2]=r*Math.cos(φ)*(Math.random()-.5)*.4;
+  }
+  const nodePos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const ni=i%NODES.length,ang=NODES[ni].angle*Math.PI/180,r=7+Math.random()*2.5;
+    nodePos[i*3]=Math.cos(ang)*r+(Math.random()-.5)*1.4;
+    nodePos[i*3+1]=Math.sin(ang)*r+(Math.random()-.5)*1.4;
+    nodePos[i*3+2]=(Math.random()-.5)*2;
+  }
+  const seeds=new Float32Array(N);
+  for(let i=0;i<N;i++)seeds[i]=Math.random();
+
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',   new THREE.BufferAttribute(new Float32Array(N*3),3));
+  geo.setAttribute('axon',       new THREE.BufferAttribute(axonPos,3));
+  geo.setAttribute('chaos',      new THREE.BufferAttribute(chaosPos,3));
+  geo.setAttribute('nodeTarget', new THREE.BufferAttribute(nodePos,3));
+  geo.setAttribute('seed',       new THREE.BufferAttribute(seeds,1));
+
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{
+      uPhase:{value:0},
+      uAccent:{value:new THREE.Color(getAccentHex())},
+      uTime:{value:0},
+      uSize:{value:Math.min(devicePixelRatio,2)*2.4},
+    },
+    vertexShader:`
+      attribute vec3 axon; attribute vec3 chaos; attribute vec3 nodeTarget; attribute float seed;
+      uniform float uPhase,uTime,uSize;
+      float ease(float t){return t*t*(3.-2.*t);}
+      void main(){
+        vec3 pos;
+        if(uPhase<1.){float t=ease(clamp(uPhase,0.,1.));pos=mix(chaos,axon,t);}
+        else if(uPhase<2.){float s=sin(uTime*2.+seed*6.28)*.04;pos=axon+vec3(s,s*.5,s*.3);}
+        else{float t=ease(clamp(uPhase-2.,0.,1.));float s=sin(uTime*2.+seed*6.28)*.04*(1.-t);pos=mix(axon+vec3(s),nodeTarget,t);}
+        vec4 mv=modelViewMatrix*vec4(pos,1.);
+        gl_Position=projectionMatrix*mv;
+        gl_PointSize=uSize*(1.+.3*sin(uTime*3.+seed*9.42))*(18./-mv.z);
+      }`,
+    fragmentShader:`
+      uniform vec3 uAccent;
+      void main(){
+        vec2 uv=gl_PointCoord-.5;float d=length(uv);
+        if(d>.5)discard;
+        float a=1.-smoothstep(.2,.5,d);
+        vec3 col=mix(vec3(1.),uAccent,smoothstep(0.,.45,d));
+        gl_FragColor=vec4(col,a*.9);
+      }`,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+  });
+
+  const points=new THREE.Points(geo,mat);
+  scene.add(points);
+
+  // orbit rings
+  const rings=new THREE.Group();scene.add(rings);
+  NODES.forEach(n=>{
+    const ang=n.angle*Math.PI/180,r=7;
+    const rg=new THREE.RingGeometry(.55,.65,40);
+    const rm=new THREE.MeshBasicMaterial({color:new THREE.Color(getAccentHex()),transparent:true,opacity:0,side:THREE.DoubleSide});
+    const ring=new THREE.Mesh(rg,rm);
+    ring.position.set(Math.cos(ang)*r,Math.sin(ang)*r,0);
+    rings.add(ring);
+  });
+
+  // node label sprites (HTML overlays)
+  const nodeLabels=document.createElement('div');
+  nodeLabels.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0;transition:opacity .6s';
+  sticky.appendChild(nodeLabels);
+  NODES.forEach((n,i)=>{
+    const ang=n.angle*Math.PI/180,r=7;
+    const x3=Math.cos(ang)*r,y3=Math.sin(ang)*r;
+    const el=document.createElement('div');
+    el.className='node-lbl';
+    el.innerHTML=`<div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--accent)">${n.label}</div><div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--t3)">${n.pct}</div>`;
+    el.style.cssText='position:absolute;transform:translate(-50%,-50%);text-align:center;white-space:nowrap';
+    el.dataset.x3=x3;el.dataset.y3=y3;
+    nodeLabels.appendChild(el);
+  });
+
+  function projectNodeLabels(){
+    const w=sticky.offsetWidth,h=sticky.offsetHeight;
+    nodeLabels.querySelectorAll('.node-lbl').forEach(el=>{
+      const x3=parseFloat(el.dataset.x3),y3=parseFloat(el.dataset.y3);
+      const v=new THREE.Vector3(x3,y3,0);
+      v.project(camera);
+      const px=(v.x*.5+.5)*w,py=(-.5*v.y+.5)*h;
+      el.style.left=px+'px';el.style.top=py+'px';
+    });
+  }
+
+  let scrollP=0;
+  function onScroll(){
+    const rect=section.getBoundingClientRect(),h=section.offsetHeight,wh=window.innerHeight;
+    const raw=-rect.top/(h-wh);
+    scrollP=Math.max(0,Math.min(1,raw));
+    let phase;
+    if(scrollP<.35)phase=scrollP/.35;
+    else if(scrollP<.6)phase=1+(scrollP-.35)/.25;
+    else phase=2+(scrollP-.6)/.4;
+    mat.uniforms.uPhase.value=phase;
+    const pct=Math.round(scrollP*100);
+    pFill.style.width=pct+'%';pPct.textContent=pct+'%';
+    const ringT=Math.max(0,(scrollP-.6)/.4);
+    rings.children.forEach(r=>r.material.opacity=ringT*.7);
+    nodeLabels.style.opacity=ringT;
+    if(scrollP<.05){fLabel.textContent='YOUR IDENTITY';sLabel.textContent='SCROLL TO REVEAL';}
+    else if(scrollP<.6){fLabel.textContent='AXON';sLabel.textContent='ASSEMBLING YOUR PROFESSIONAL MAP';}
+    else{
+      const ni=Math.min(Math.floor((scrollP-.6)/.4*NODES.length),NODES.length-1);
+      fLabel.textContent=NODES[ni].label;sLabel.textContent=NODES[ni].sub+' · '+NODES[ni].pct+' READINESS';
+    }
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+
+  themeCallbacks.push(()=>{
+    setTimeout(()=>{
+      const col=new THREE.Color(getAccentHex());
+      mat.uniforms.uAccent.value=col;
+      rings.children.forEach(r=>r.material.color.set(col));
+    },60);
+  });
+
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    mat.uniforms.uTime.value=clock.getElapsedTime();
+    points.rotation.z=Math.sin(clock.getElapsedTime()*.15)*.05;
+    rings.rotation.z=points.rotation.z;
+    projectNodeLabels();
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+
+// ═══════════════════════════════════════════
+// SHARED UTILS
+// ═══════════════════════════════════════════
+function s2(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+window.addEventListener('scroll',()=>{document.getElementById('nav').style.borderBottomColor=window.scrollY>60?'var(--ln)':'transparent';});
+
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');ro.unobserve(en.target);}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+const mbObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.querySelectorAll('.mb-cell').forEach((c,i)=>setTimeout(()=>c.querySelector('.mb-cell-bar').style.width=c.dataset.pct+'%',i*120));mbObs.unobserve(en.target);}});},{threshold:.3});
+const mbG=document.getElementById('mb-grid');if(mbG)mbObs.observe(mbG);
+
+const vbObs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.querySelectorAll('.vb-fill').forEach((b,i)=>setTimeout(()=>b.style.width=b.dataset.w+'%',i*150));vbObs.unobserve(en.target);}});},{threshold:.3});
+const vbEl=document.getElementById('vb-bars');if(vbEl)vbObs.observe(vbEl);
+
+function switchTab(btn,id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active');}
+function switchResume(btn,id){document.querySelectorAll('.r-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');['r1','r2','r3'].forEach(r=>{const el=document.getElementById(r);if(el)el.style.display='none';});document.getElementById(id).style.display='block';}
+
+const S={name:'',email:'',persona:'',domain:'',interests:[],bundle:null,price:0,max:3,ids:[]};
+function showFP(n){document.querySelectorAll('.funnel-phase').forEach(p=>p.classList.remove('active'));document.getElementById(n==='fin'?'fpfin':'fp'+n).classList.add('active');document.getElementById('funnel-section').scrollIntoView({behavior:'smooth',block:'start'});}
+function selP(el){document.querySelectorAll('.p-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');S.persona=el.dataset.v;}
+function selI(el){if(el.classList.contains('sel')){el.classList.remove('sel');S.interests=S.interests.filter(i=>i!==el.textContent);}else{if(S.interests.length>=3)return;el.classList.add('sel');S.interests.push(el.textContent);}}
+function g1(){showFP(1);}
+function g2(){S.name=document.getElementById('i-name').value.trim();S.email=document.getElementById('i-email').value.trim();S.domain=document.getElementById('i-dom').value;const err=document.getElementById('e1');if(!S.name||!S.email||!S.persona||!S.domain){err.classList.add('show');return;}err.classList.remove('show');document.getElementById('t2n').textContent=S.name.toUpperCase();document.getElementById('p2info').innerHTML=`<div class="info-item"><div class="info-lbl">Subject</div><div class="info-val">${S.name.toUpperCase()}</div></div><div class="info-item"><div class="info-lbl">Stage</div><div class="info-val">${S.persona.toUpperCase()}</div></div><div class="info-item"><div class="info-lbl">Domain</div><div class="info-val">${S.domain.toUpperCase()}</div></div><div class="info-item"><div class="info-lbl">Signals</div><div class="info-val">${S.interests.length?S.interests.join(', '):'NONE'}</div></div>`;showFP(2);}
+function g3(){document.getElementById('sc-sub').textContent='SUBJECT: '+S.name.toUpperCase();showFP(3);setTimeout(()=>document.querySelectorAll('.sc-fill').forEach(b=>b.style.width=b.dataset.w+'%'),250);}
+function selB(el,type,price,max){document.querySelectorAll('.b-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');S.bundle=type;S.price=price;S.max=max||3;}
+function g4(){const err=document.getElementById('e3');if(!S.bundle||S.bundle==='audit'){err.classList.add('show');return;}err.classList.remove('show');S.ids=[];document.querySelectorAll('.id-card').forEach(c=>c.classList.remove('sel','off'));document.getElementById('smx').textContent=S.max;document.getElementById('sct').textContent=0;document.getElementById('fp4p').textContent='₹'+S.price;document.getElementById('fp4b').textContent=S.bundle==='elite'?'Elite Pivot — ₹29 applied':'Starter Bundle — ₹29 applied';showFP(4);}
+function selId(el,id){if(el.classList.contains('off'))return;if(el.classList.contains('sel')){el.classList.remove('sel');S.ids=S.ids.filter(i=>i!==id);}else{if(S.ids.length>=S.max)return;el.classList.add('sel');S.ids.push(id);}document.getElementById('sct').textContent=S.ids.length;if(S.ids.length>=S.max)document.querySelectorAll('.id-card:not(.sel)').forEach(c=>c.classList.add('off'));else document.querySelectorAll('.id-card').forEach(c=>c.classList.remove('off'));}
+function gFin(){const err=document.getElementById('e4');if(S.ids.length<S.max){err.classList.add('show');return;}err.classList.remove('show');const names={1:'Binary',2:'Silicon',3:'Analytical',4:'Creative',5:'Operational'};document.getElementById('fn').textContent=S.name.toUpperCase();document.getElementById('finb').textContent=S.bundle.toUpperCase();document.getElementById('fini').textContent=S.ids.map(i=>names[i]).join(', ').toUpperCase();document.getElementById('fine').textContent=S.email;showFP('fin');}
+</script>
+</body>
+</html>
