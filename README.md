@@ -21,4 +21,4 @@ Axon Draft is a specialized sub-brand of **The White Moth Inc.**, dedicated to d
 * **Admin**: `admin.axon@whitemoth.inc` — System infrastructure & security.
 
 ---
-*Developed by The White Moth Inc. // Brahmapur, Odisha* [cite: 2026-03-05]
+*Developed by The White Moth Inc. // 
